@@ -1,19 +1,28 @@
 <template>
   <section>
     <div class="data-info">
-      <air-place :place="place" :period="period"></air-place>
+      <air-place
+        :place="place"
+        :period="period"
+        :lat="lat"
+        :long="long"
+      ></air-place>
     </div>
-    <div class="data-analyze"></div>
+    <div class="data-analyze">
+      <analysis-body></analysis-body>
+    </div>
   </section>
 </template>
 
 <script>
-import dummydata from "./dummydata.js";
-import AirPlace from "../components/airData/AirPlace";
+import dummydata from "../components/datasets/dummydata";
+import AirPlace from "../components/displayAir/AirPlace";
+import AnalysisBody from "../components/displayAnalysis/AnalysisBody";
 
 export default {
   components: {
     AirPlace,
+    AnalysisBody,
   },
   created() {
     this.getNavigation();
@@ -77,12 +86,20 @@ section {
 }
 .data-info {
   height: 100%;
-  width: 30%;
+  min-width: 30%;
+  width: auto;
   /* background: rgb(82, 40, 40); */
 }
 .data-analyze {
   height: 100%;
-  width: 70%;
-  background: rgb(12, 12, 116);
+  width: 70% auto;
+  /* background: rgb(12, 12, 116); */
+  padding: 0.5rem;
+}
+
+@media only screen and (max-width: 600px) {
+  section {
+    flex-direction: column;
+  }
 }
 </style>

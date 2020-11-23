@@ -41,7 +41,7 @@ body::-webkit-scrollbar-thumb {
 main {
   /* background: #1d1d1d; */
   background: rgb(29, 33, 37);
-  height: 100vh;
+  height: auto;
   margin-left: 5rem;
   padding: 1rem;
 }

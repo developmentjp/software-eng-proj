@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>AQI</h1>
+    <h1>AIR QUALITY INDEX</h1>
     <div class="aqi" :style="{ background: '#' + period.color }">
       <h1>{{ period.aqi }}</h1>
     </div>
@@ -8,23 +8,33 @@
       {{ period.category.toUpperCase() }}
     </h2>
     <div class="dominant">
-      <h3>Dominant Pollutant: {{ period.dominant }}</h3>
-      <i
-        @click="search"
-        class="pi pi-question-circle"
-        style="font-size: 1rem; cursor: pointer"
-      ></i>
+      <h3 class="pollutant-text">Dominant Pollutant: {{ period.dominant }}</h3>
+      <span
+        style="text-align:center;display: flex; align-items:center; margin-left:0.25rem"
+      >
+        <i
+          @click="search"
+          class="pi pi-question-circle"
+          style="font-size: 1rem; cursor: pointer;"
+        ></i>
+      </span>
     </div>
     <p><i>*Data fetch from https://api.aerisapi.com</i></p>
     <Dialog v-model:visible="display">
       <template #header>
         <h3>{{ period.dominant }}</h3>
       </template>
-      <div class="dialog">
+      <div class="dialog-content">
         {{ content }}
       </div>
       <template #footer>
-        <Button label="Ok" icon="pi pi-check" autofocus @click="closeSearch" />
+        <Button
+          class="p-button-secondary"
+          label="Ok"
+          icon="pi pi-check"
+          autofocus
+          @click="closeSearch"
+        />
       </template>
     </Dialog>
   </div>
@@ -33,7 +43,7 @@
 <script>
 import Dialog from "primevue/dialog";
 import Button from "primevue/button";
-import pollutiondata from "../../pages/pollutiondata";
+import pollutiondata from "../datasets/pollutiondata";
 export default {
   components: {
     Dialog,
@@ -93,8 +103,8 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-.dialog {
-  width: 30rem;
+.dialog-content {
+  max-width: 20rem;
   line-height: 1rem;
 }
 
@@ -103,5 +113,11 @@ h3 {
 }
 p {
   font-size: 0.7rem;
+}
+
+@media only screen and (max-width: 600px) {
+  .pollutant-text {
+    font-size: 1rem;
+  }
 }
 </style>

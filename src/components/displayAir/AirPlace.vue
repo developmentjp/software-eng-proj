@@ -31,19 +31,22 @@
         <air-period :period="period"></air-period>
       </div>
     </div>
+
     <div class="wt-container">
-      <h1>weather</h1>
+      <weather-place :lat="lat" :long="long"></weather-place>
     </div>
   </div>
 </template>
 
 <script>
 import AirPeriod from "./AirPeriod";
+import WeatherPlace from "../displayWeather/WeatherPlace";
 export default {
   components: {
     AirPeriod,
+    WeatherPlace,
   },
-  props: ["place", "period"],
+  props: ["place", "period", "lat", "long"],
   methods: {},
 };
 </script>
@@ -81,8 +84,10 @@ export default {
 }
 
 .wt-container {
-  border: 3px solid rgb(58, 58, 58);
-  border-radius: 1rem;
+  background: #23232e;
+  border: 3px solid #23232e;
+  border-radius: 0.5rem;
   line-height: 0.75rem;
+  height: 60% auto;
 }
 </style>
