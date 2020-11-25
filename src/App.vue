@@ -19,6 +19,7 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 
 body {
+  background: rgb(29, 33, 37);
   font-size: 16px;
   font-family: "Open Sans";
   color: white;
@@ -40,7 +41,6 @@ body::-webkit-scrollbar-thumb {
 
 main {
   /* background: #1d1d1d; */
-  background: rgb(29, 33, 37);
   height: auto;
   margin-left: 5rem;
   padding: 1rem;

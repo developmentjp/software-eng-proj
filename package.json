@@ -12,6 +12,7 @@
     "primeicons": "^4.1.0",
     "primevue": "^3.0.0-rc.2",
     "vue": "^3.0.0",
+    "vue-input-autowidth": "^1.0.10",
     "vue-router": "^4.0.0-rc.5"
   },
   "devDependencies": {

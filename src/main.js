@@ -11,6 +11,5 @@ import Button from "primevue/button";
 const app = createApp(App);
 
 app.component("p-button", Button);
-
 app.use(router);
 app.mount("#app");
