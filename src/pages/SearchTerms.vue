@@ -4,17 +4,22 @@
     <h3>Search the terms that you don't understand here</h3>
     <a
       title="User:Psiĥedelisto rendered, User:Slashme created the Blender model and The Titou made the rendering&#039;s background transparent., CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons"
-      href="https://commons.wikimedia.org/wiki/File:Wikipedia_logo_puzzle_globe_spins_horizontally_and_vertically,_revealing_the_contents_of_all_of_its_puzzle_pieces,_without_background.gif"
       ><img
+        class="wiki-img"
         width="256"
         alt="Wikipedia logo puzzle globe spins horizontally and vertically, revealing the contents of all of its puzzle pieces, without background"
         src="https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia_logo_puzzle_globe_spins_horizontally_and_vertically%2C_revealing_the_contents_of_all_of_its_puzzle_pieces%2C_without_background.gif"
     /></a>
-    <p class="animation-text"><i>*Animation via Wikimedia Commons</i></p>
+    <a
+      href="https://commons.wikimedia.org/wiki/File:Wikipedia_logo_puzzle_globe_spins_horizontally_and_vertically,_revealing_the_contents_of_all_of_its_puzzle_pieces,_without_background.gif"
+      class="animation-text"
+      ><i>*Animation via Wikimedia Commons</i></a
+    >
     <form @submit.prevent="handleSubmit">
       <span class="p-input-icon-left" style="margin-bottom: 1rem">
         <i class="pi pi-search" />
         <InputText
+          class="input-text"
           type="text"
           v-model="searchQuery"
           placeholder="Search"
@@ -24,7 +29,7 @@
       <Button
         v-if="!isLoading"
         style="color: white"
-        class="p-button-secondary p-button-outlined"
+        class="input-button p-button-secondary p-button-outlined"
         type="submit"
         label="Search Word"
       />
@@ -51,43 +56,46 @@
       </template>
     </Dialog>
 
-    <div v-if="emptyResults">
-      <h3>No result found &nbsp;:(</h3>
-      <h5>
-        Your search&nbsp;"<strong>{{ tempQuery }}</strong
-        >"&nbsp;did not match any documents.
-      </h5>
-      <h5 style="text-align:center">
-        Please Check the spelling of the words correctly.
-      </h5>
-    </div>
-    <div
-      v-else
-      class="result-container"
-      v-for="result in resultArray"
-      :key="result"
-    >
-      <div class="icon-container">
-        <a :href="result.url" class="result-title" target="_blank"
-          ><h4>{{ result.title }}</h4></a
-        >
-        <div style="display:flex; ">
-          <h4 style="padding-top: 0.20rem; margin-right: 0.5rem">
-            View Full Definition
-          </h4>
+    <button class="goto-button" v-if="tempQuery" v-scroll-to="'#viewResult'">
+      <i class="pi pi-angle-double-down" style="fontSize:2rem"></i>
+    </button>
+
+    <div id="viewResult">
+      <div v-if="emptyResults">
+        <h3>No result found &nbsp;:(</h3>
+        <h5>
+          Your search&nbsp;"<strong>{{ tempQuery }}</strong
+          >"&nbsp;did not match any documents.
+        </h5>
+        <h5 style="text-align:center">
+          Please Check the spelling of the words correctly.
+        </h5>
+      </div>
+
+      <div
+        v-else
+        class="result-container"
+        v-for="result in resultArray"
+        :key="result"
+      >
+        <div class="icon-container">
+          <a :href="result.url" class="result-title" target="_blank"
+            ><h4>{{ result.title }}</h4></a
+          >
           <a :href="result.url" target="_blank"
             ><i class="external-link pi pi-external-link"></i
           ></a>
         </div>
+
+        <a :href="result.url" target="_blank" class="result-url"
+          ><h5>
+            {{ result.url }}
+          </h5></a
+        >
+        <p class="result-snippet">
+          <span v-html="result.snippet"></span>&nbsp;...
+        </p>
       </div>
-      <a :href="result.url" target="_blank" class="result-url"
-        ><h5>
-          {{ result.url }}
-        </h5></a
-      >
-      <p class="result-snippet">
-        <span v-html="result.snippet"></span>&nbsp;...
-      </p>
     </div>
   </section>
 </template>
@@ -172,15 +180,16 @@ export default {
 
 <style scoped>
 section {
-  height: 100%;
+  height: inherit auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding-bottom: 5rem;
 }
 section h1 {
   font-size: 2.5rem;
-  margin-block-start: 1rem;
+  margin-block-start: 2rem;
   margin-block-end: 0rem;
 }
 section h3 {
@@ -189,6 +198,9 @@ section h3 {
 }
 .animation-text {
   font-size: 0.7rem;
+  margin-bottom: 2rem;
+  color: white;
+  text-decoration: none;
 }
 form {
   display: flex;
@@ -200,6 +212,24 @@ form {
   max-width: 20rem;
   line-height: 1rem;
   margin: 0rem;
+}
+.goto-button {
+  background: none;
+  border: none;
+  outline: none;
+  color: white;
+  cursor: pointer;
+}
+.goto-button:hover {
+  color: #a59f9f;
+  border: 1px solid #a59f9f;
+  border-radius: 45%;
+}
+#viewResult {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 0rem 0rem 0rem;
 }
 .result-container {
   height: auto;
@@ -230,9 +260,42 @@ form {
   display: flex;
   justify-content: space-between;
 }
+.icon-container h4 {
+  height: auto;
+  line-height: 2rem;
+}
 h4,
 h5,
 p {
+  font-weight: 300;
   margin: 0.3rem;
+}
+@media only screen and (min-height: 1080px) {
+  section {
+    margin: 3rem 0rem;
+  }
+  h1 {
+    font-size: 5rem !important;
+  }
+  h3 {
+    margin-bottom: 2rem !important;
+    font-size: 2rem !important;
+  }
+  .animation-text {
+    margin-top: 1rem;
+    font-size: 1rem !important;
+  }
+  .wiki-img {
+    width: 30rem;
+  }
+  .input-text {
+    width: 30rem !important;
+    padding: 1rem;
+  }
+  .input-button {
+    width: 15rem;
+    font-size: 1.5rem;
+    padding: 0.7rem 2rem 0.7rem 2rem !important;
+  }
 }
 </style>

@@ -1,15 +1,15 @@
 <template>
   <section>
     <div class="data-info">
-      <air-place
+      <AirPlace
         :place="place"
         :period="period"
         :lat="lat"
         :long="long"
-      ></air-place>
+      ></AirPlace>
     </div>
     <div class="data-analyze">
-      <analysis-body></analysis-body>
+      <AnalysisBody></AnalysisBody>
     </div>
   </section>
 </template>
@@ -88,6 +88,7 @@ section {
   height: 100%;
   min-width: 30%;
   width: auto;
+  border: 3px solid #16161d83;
   /* background: rgb(82, 40, 40); */
 }
 .data-analyze {
@@ -99,7 +100,9 @@ section {
 
 @media only screen and (max-width: 600px) {
   section {
+    height: auto;
     flex-direction: column;
+    margin-bottom: 5rem;
   }
 }
 </style>

@@ -77,7 +77,7 @@
     </table>
 
     <p-button
-      style="color:white"
+      style="color:white;"
       label="View Solutions and Suggestions"
       class="p-button-outlined"
       @click="check"
@@ -100,7 +100,6 @@ export default {
 section {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
@@ -109,6 +108,7 @@ table {
   border-collapse: collapse;
   margin: 0rem 0rem 0.5rem 0rem;
   padding: 0;
+  /* height: 80%; */
   width: 100%;
   table-layout: fixed;
 }
@@ -218,6 +218,18 @@ tbody {
 
   table td:last-child {
     border-bottom: 0;
+  }
+}
+@media only screen and (min-height: 1080px) {
+  * {
+    font-size: 1.3rem;
+  }
+  /* table {
+    height: 80%;
+  } */
+  .p-button {
+    padding: 1rem 2rem 1rem 2rem;
+    font-size: 1.3rem;
   }
 }
 </style>
