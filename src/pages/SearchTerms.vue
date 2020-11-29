@@ -13,6 +13,7 @@
     <a
       href="https://commons.wikimedia.org/wiki/File:Wikipedia_logo_puzzle_globe_spins_horizontally_and_vertically,_revealing_the_contents_of_all_of_its_puzzle_pieces,_without_background.gif"
       class="animation-text"
+      target="_blank"
       ><i>*Animation via Wikimedia Commons</i></a
     >
     <form @submit.prevent="handleSubmit">
@@ -52,6 +53,7 @@
           class="p-button-secondary"
           label="Okay"
           @click="displayDialog"
+          v-scroll-to="'#viewResult'"
         />
       </template>
     </Dialog>

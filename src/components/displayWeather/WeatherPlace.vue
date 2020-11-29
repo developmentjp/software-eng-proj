@@ -3,7 +3,7 @@
     <div class="header-container">
       <header>
         <div>
-          <h1>Weather Status</h1>
+          <h1>WEATHER STATUS</h1>
           <h3>{{ weather.dateTimeISO }}</h3>
         </div>
         <div style="display:flex; align-items:center">

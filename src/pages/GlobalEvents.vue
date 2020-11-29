@@ -1,28 +1,72 @@
 <template>
   <section>
-    <form @submit.prevent="getQuery">
-      <InputText
-        type="text"
-        v-model="searchQuery"
-        placeholder="Search"
-        style="width: 20rem"
-      />
-      <Button
-        v-if="!isLoading"
-        style="color: white; margin-left:0.5rem"
-        class="p-button-secondary p-button-outlined"
-        type="submit"
-        label="Search Country"
-      />
-    </form>
-    <section>
-      <div class="pie">
-        <CovidPie></CovidPie>
+    <div class="heading">
+      <div class="head-text">
+        <h1>&nbsp;<span style="color:red">COVID-19 STATUS: &nbsp;</span></h1>
+        <div style="display:flex; align-items:center">
+          <h1>{{ headText.toUpperCase() }}</h1>
+          <img
+            v-if="chartChoice === 'country'"
+            class="heading-image1"
+            :src="flag"
+            alt="country-flag"
+          />
+          <img
+            v-if="chartChoice === 'world'"
+            class="heading-image2"
+            :src="flag"
+            alt="country-flag"
+          />
+        </div>
       </div>
-      <div class="chart">
-        <CovidChart></CovidChart>
+
+      <form @submit.prevent="getQuery">
+        <div class="form-input-button">
+          <InputText
+            class="input-text"
+            type="text"
+            v-model.trim="tempQuery"
+            placeholder="Enter Country Name"
+          />
+
+          <Button
+            v-if="!isLoading"
+            style="color: white; margin-left:0.5rem"
+            class="submit-button p-button-secondary p-button-outlined"
+            type="submit"
+            label="Search Country"
+          />
+          <i v-else class="form-button-loading pi pi-spin pi-spinner"></i>
+        </div>
+        <span
+          ><i style="font-size: 0.7rem"
+            >*Try to enter the text "all" to view worldwide data</i
+          ></span
+        >
+      </form>
+    </div>
+    <div v-if="checkSubmit && !isLoading" class="chart-container">
+      <div v-if="checkSubmit" class="pie">
+        <CovidPie :search-query="searchQuery" :pie-data="pieData"></CovidPie>
       </div>
-    </section>
+      <div v-if="renderChart" class="chart">
+        <div v-if="checkSubmit">
+          <CovidChart
+            :search-query="searchQuery"
+            :chart-data="chartData"
+            :chart-choice="chartChoice"
+          >
+          </CovidChart>
+        </div>
+        <div v-if="!renderChart">
+          <i style="fontSize: 5rem;" class="pi pi-spin pi-spinner"></i>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="checkSubmit && isLoading" class="loading-chart">
+      <i class="chart-loading pi pi-spin pi-spinner"></i>
+    </div>
   </section>
 </template>
 
@@ -38,39 +82,230 @@ export default {
     CovidPie,
     CovidChart,
   },
+  data() {
+    return {
+      searchQuery: "",
+      tempQuery: "",
+      headText: "",
+      flag: null,
+      isLoading: false,
+      checkSubmit: false,
+      pieData: null,
+      chartData: null,
+      chartChoice: "",
+      renderChart: true,
+    };
+  },
+  methods: {
+    async getQuery() {
+      this.searchQuery = this.tempQuery.slice(0);
+      this.tempQuery = "";
+      if (this.searchQuery === "") {
+        alert("Please enter a country name first!");
+      } else {
+        try {
+          this.isLoading = true;
+          setTimeout(() => {
+            this.isLoading = false;
+          }, 500);
+          this.checkSubmit = false;
+          if (this.searchQuery.toLowerCase() === "all") {
+            this.chartChoice = "world";
+            this.headText = "world";
+          } else {
+            this.chartChoice = "country";
+            this.headText = this.searchQuery;
+          }
+          const pieData = await this.fetchPieData(this.searchQuery);
+          const chartData = await this.fetchChartData(this.searchQuery);
+          this.pieData = pieData;
+          this.chartData = chartData;
+          this.checkSubmit = true;
+          if (this.chartChoice === "world") {
+            this.flag =
+              "https://freepngimg.com/thumb/globe/40566-7-earth-globe-free-transparent-image-hq.png";
+          } else {
+            this.flag = this.pieData.countryInfo.flag;
+          }
+        } catch (err) {
+          alert(err.message);
+        }
+      }
+    },
+    async fetchPieData(country) {
+      if (this.searchQuery === "all") {
+        const response = await fetch(
+          `https://disease.sh/v3/covid-19/all?today=true&strict=true`
+        );
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status} (${response.message}) Please enter a valid data`;
+          throw new Error(message);
+        }
+        const data = await response.json();
+        return data;
+      } else {
+        const response = await fetch(
+          `https://disease.sh/v3/covid-19/countries/${country}?today=true&strict=true`
+        );
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status} (${response.message}) Please enter a valid data`;
+          throw new Error(message);
+        }
+        const data = await response.json();
+        return data;
+      }
+    },
+    async fetchChartData(country) {
+      if (this.chartChoice === "country") {
+        const response = await fetch(
+          `https://disease.sh/v3/covid-19/historical/${country}?lastdays=100`
+        );
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status} (${response.message}) Please enter a valid data`;
+          throw new Error(message);
+        }
+        const data = await response.json();
+        return data;
+      }
+      if (this.chartChoice === "world") {
+        const response = await fetch(
+          `https://disease.sh/v3/covid-19/historical/all?lastdays=100`
+        );
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status} (${response.message}) Please enter a valid data`;
+          throw new Error(message);
+        }
+        const data = await response.json();
+        return data;
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
-.main {
+section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: auto;
-  height: 100%;
-}
-section {
-  display: flex;
-  margin: 1rem 0rem 0rem 0rem;
   height: 100%;
   width: 100%;
 }
-.data-info {
-  height: 100%;
-  min-width: 30%;
-  width: auto;
-  /* background: rgb(82, 40, 40); */
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
-.data-analyze {
+.head-text {
+  display: flex;
+  align-items: center;
+}
+.heading-image1 {
+  height: 2.2rem;
+  width: 3.5rem;
+  margin-left: 1rem;
+}
+.heading-image2 {
+  height: 3.5em;
+  width: 3.5rem;
+  margin-left: 1rem;
+}
+.form-input-button {
+  display: flex;
+}
+.form-button-loading {
+  font-size: 2rem;
+  margin: 0rem 4rem 0rem 4rem;
+}
+.input-text {
+  width: 20rem;
+}
+.chart-container {
+  display: flex;
   height: 100%;
-  width: 70% auto;
-  /* background: rgb(12, 12, 116); */
-  padding: 0.5rem;
+  width: 100%;
+  padding-top: 0.5rem;
+}
+.chart-loading {
+  font-size: 10rem;
+  margin: 0rem 4rem 0rem 4rem;
+}
+.loading-chart {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+.pie {
+  height: 100%;
+  width: 30%;
+}
+.chart {
+  height: 100%;
+  width: 70%;
+  background: #23232e;
+  border-left: 5px solid #1c1c25;
+}
 @media only screen and (max-width: 600px) {
   section {
+    height: auto;
+  }
+  section,
+  .heading,
+  form {
+    display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .heading-image1 {
+    height: 1.5rem;
+    width: 2.2rem;
+    margin-left: 0.5rem;
+  }
+  .heading-image2 {
+    height: 2.2rem;
+    width: 2.4rem;
+    margin-left: 0.5rem;
+  }
+  .form-input-button {
+    flex-direction: column;
+    justify-content: center;
+  }
+  .form-button-loading {
+    font-size: 0rem;
+  }
+  .head-text {
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+  }
+  h1 {
+    text-align: center;
+    margin-block-start: 0em !important;
+    margin-block-end: 0em !important;
+  }
+  .submit-button {
+    margin-top: 0.5rem;
+  }
+  .chart-container {
+    flex-direction: column;
+  }
+  .pie {
+    width: 100%;
+  }
+  .chart {
+    width: 100%;
+    background: #23232e;
+    border-left: none;
+    margin-top: 1rem;
+    margin-bottom: 6rem;
+  }
+  .chart-loading {
+    font-size: 5rem;
+    margin: 4rem 4rem 0rem 4rem;
   }
 }
 </style>
