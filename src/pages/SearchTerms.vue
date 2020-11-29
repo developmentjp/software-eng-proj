@@ -187,7 +187,7 @@ section {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-bottom: 5rem;
+  padding: 1rem 1rem 5rem 1rem;
 }
 section h1 {
   font-size: 2.5rem;

@@ -46,7 +46,6 @@ body::-webkit-scrollbar-thumb {
   /* background: blue; */
   height: 100%;
   margin-left: 5rem;
-  padding: 1rem;
 }
 
 @media only screen and (max-width: 600px) {

@@ -190,6 +190,8 @@ section {
   align-items: center;
   height: 100%;
   width: 100%;
+
+  padding: 1rem;
 }
 .heading {
   display: flex;

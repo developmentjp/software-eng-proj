@@ -83,6 +83,7 @@ section {
   display: flex;
   margin: auto;
   height: 100%;
+  padding: 1rem;
 }
 .data-info {
   height: 100%;
