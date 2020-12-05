@@ -9,7 +9,7 @@
       ></AirPlace>
     </div>
     <div class="data-analyze">
-      <AnalysisBody></AnalysisBody>
+      <AnalysisBody :period="period"></AnalysisBody>
     </div>
   </section>
 </template>
@@ -94,7 +94,7 @@ section {
 }
 .data-analyze {
   height: 100%;
-  width: 70% auto;
+  width: 70%;
   /* background: rgb(12, 12, 116); */
   padding: 0.5rem;
 }
@@ -104,6 +104,12 @@ section {
     height: auto;
     flex-direction: column;
     margin-bottom: 5rem;
+    padding: 0.2rem;
+  }
+  .data-analyze {
+    height: 100%;
+    width: 100%;
+    padding: 0rem !important;
   }
 }
 </style>

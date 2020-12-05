@@ -90,6 +90,7 @@ export default {
 section {
   display: flex;
   flex-direction: column;
+  padding: 0rem !important;
 }
 .data-container {
   height: 50%;

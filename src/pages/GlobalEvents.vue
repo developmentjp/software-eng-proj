@@ -45,6 +45,18 @@
         >
       </form>
     </div>
+
+    <div v-if="!checkSubmit && !isLoading" class="no-data">
+      <h1 style="font-size: 5rem;">
+        :(
+      </h1>
+      <div class="no-data-child">
+        <h1>No Data to display</h1>
+        <br />
+        <h3>Enter A value on the input field first.</h3>
+      </div>
+    </div>
+
     <div v-if="checkSubmit && !isLoading" class="chart-container">
       <div v-if="checkSubmit" class="pie">
         <CovidPie :search-query="searchQuery" :pie-data="pieData"></CovidPie>
@@ -222,6 +234,24 @@ section {
 }
 .input-text {
   width: 20rem;
+}
+.no-data {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.no-data h1 {
+  margin-block-start: 0rem;
+  margin-block-end: 0rem;
+  margin-right: 2rem;
+}
+.no-data-child h1,
+h3 {
+  margin-block-start: 0rem;
+  margin-block-end: 0rem;
 }
 .chart-container {
   display: flex;

@@ -36,7 +36,9 @@
 
         <tr class="orange">
           <td data-label="Daily AQI Color">Orange</td>
-          <td data-label="Levels of Concern">Unhealthy for Sensitive Groups</td>
+          <td data-label="Levels of Concern">
+            Unhealthy for Sensitive Groups
+          </td>
           <td data-label="Values of Index">101 to 150</td>
           <td data-label="Description of Air Quality">
             Members of sensitive groups may experience health effects. The
@@ -77,7 +79,7 @@
     </table>
 
     <p-button
-      style="color:white;"
+      style="color:white; padding: 1rem"
       label="View Solutions and Suggestions"
       class="p-button-outlined"
       @click="check"
@@ -101,14 +103,13 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
 }
-
 table {
   border: 1px solid #ccc;
   border-collapse: collapse;
   margin: 0rem 0rem 0.5rem 0rem;
   padding: 0;
-  /* height: 80%; */
   width: 100%;
   table-layout: fixed;
 }
@@ -132,7 +133,7 @@ table td {
 }
 
 table th {
-  font-size: 0.85em;
+  font-size: 0.7rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -141,8 +142,8 @@ thead {
   font-weight: 700;
 }
 tbody {
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.77rem;
+  font-weight: 500;
 }
 
 .green {
@@ -173,8 +174,13 @@ tbody {
   color: white;
 }
 @media screen and (max-width: 600px) {
+  section {
+    width: 100%;
+    margin: none !important;
+  }
   table {
     border: 0;
+    width: 100%;
   }
 
   table caption {

@@ -1,7 +1,11 @@
 <template>
   <section class="container">
     <analysis-table v-if="!viewSolution" @showSolution="show"></analysis-table>
-    <analysis-content v-else @showSolution="show"></analysis-content>
+    <analysis-content
+      v-else
+      @showSolution="show"
+      :period="period"
+    ></analysis-content>
   </section>
 </template>
 
@@ -9,6 +13,7 @@
 import AnalysisContent from "./AnalysisContent.vue";
 import AnalysisTable from "./AnalysisTable";
 export default {
+  props: ["period"],
   components: {
     AnalysisTable,
     AnalysisContent,
@@ -27,8 +32,11 @@ export default {
 </script>
 
 <style scoped>
-.container {
+/* .container {
   height: 100%;
   width: 100%;
+} */
+.container {
+  padding: 0rem !important;
 }
 </style>
