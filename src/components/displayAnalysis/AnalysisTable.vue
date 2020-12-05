@@ -79,9 +79,9 @@
     </table>
 
     <p-button
-      style="color:white; padding: 1rem"
+      style="color:white; padding: 1rem; margin-top:1rem"
       label="View Solutions and Suggestions"
-      class="p-button-outlined"
+      class="p-button-outlined r-show-button"
       @click="check"
     />
   </section>
@@ -178,6 +178,9 @@ tbody {
     width: 100%;
     margin: none !important;
   }
+  .caption {
+    margin-top: 1rem;
+  }
   table {
     border: 0;
     width: 100%;
@@ -228,13 +231,13 @@ tbody {
 }
 @media only screen and (min-height: 1080px) {
   * {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
   /* table {
     height: 80%;
   } */
   .p-button {
-    padding: 1rem 2rem 1rem 2rem;
+    padding: 2rem 2rem 1rem 2rem;
     font-size: 1.3rem;
   }
 }

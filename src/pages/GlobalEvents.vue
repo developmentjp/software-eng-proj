@@ -47,7 +47,7 @@
     </div>
 
     <div v-if="!checkSubmit && !isLoading" class="no-data">
-      <h1 style="font-size: 5rem;">
+      <h1 class="no-data-first-h1">
         :(
       </h1>
       <div class="no-data-child">
@@ -238,6 +238,7 @@ section {
 .no-data {
   height: 100%;
   width: 100%;
+  margin: 10rem 0rem 0rem 0rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -247,6 +248,10 @@ section {
   margin-block-start: 0rem;
   margin-block-end: 0rem;
   margin-right: 2rem;
+}
+
+.no-data:first-child {
+  font-size: 5rem;
 }
 .no-data-child h1,
 h3 {
@@ -338,6 +343,13 @@ h3 {
   .chart-loading {
     font-size: 5rem;
     margin: 4rem 4rem 0rem 4rem;
+  }
+  .no-data {
+    font-size: 0.8rem;
+  }
+  .no-data-first-h1 {
+    margin-right: 1.3rem !important;
+    font-size: 5rem;
   }
 }
 </style>

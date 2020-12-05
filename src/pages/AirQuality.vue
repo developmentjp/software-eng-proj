@@ -86,7 +86,7 @@ section {
   padding: 1rem;
 }
 .data-info {
-  height: 100%;
+  height: auto;
   min-width: 30%;
   width: auto;
   border: 3px solid #16161d83;
@@ -103,13 +103,18 @@ section {
   section {
     height: auto;
     flex-direction: column;
-    margin-bottom: 5rem;
+    margin-bottom: 7rem;
     padding: 0.2rem;
   }
   .data-analyze {
     height: 100%;
     width: 100%;
     padding: 0rem !important;
+  }
+}
+@media only screen and (min-height: 1080px) {
+  section {
+    padding: 3rem 3rem 1rem 3rem;
   }
 }
 </style>

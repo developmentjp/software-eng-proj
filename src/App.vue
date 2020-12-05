@@ -44,7 +44,8 @@ body::-webkit-scrollbar-thumb {
 
 .router {
   /* background: blue; */
-  height: 100%;
+  /* height: 100%; change when necessary*/
+  height: auto;
   margin-left: 5rem;
 }
 

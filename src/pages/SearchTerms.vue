@@ -272,6 +272,12 @@ p {
   font-weight: 300;
   margin: 0.3rem;
 }
+@media only screen and (max-width: 600px) {
+  #viewResult {
+    padding: 0rem;
+    margin: 1rem 0rem 0rem 0rem;
+  }
+}
 @media only screen and (min-height: 1080px) {
   section {
     margin: 3rem 0rem;
