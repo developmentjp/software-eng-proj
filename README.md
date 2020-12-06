@@ -27,7 +27,7 @@ npm run lint
 ### Remove in package.json when npm installing
 
 ```
-vuescrollto
+vuescrollto -->tentative check components
 vue-input-autowidth
 ```
 
