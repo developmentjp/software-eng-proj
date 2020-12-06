@@ -7,55 +7,57 @@
       @click="goBack"
     />
     <div class="analysis-content">
-      <h1>Analysis</h1>
-      <div class="analysis-suggestion">
-        <div>
-          <i class="pi pi-user" style="fontSize: 3rem"></i>
-          <h3>
-            Hello User!&nbsp; We noticed that the Air Quality status in your
-            surroundings is quite
-            {{ period.category }}!<br />It has an AQI rating of
-            {{ period.aqi }}!
-          </h3>
-        </div>
-      </div>
-
-      <div class="analysis-suggestion suggestion" v-if="!viewEvaluation">
-        <div class="suggestion-header">
-          <h3>
-            We provided here some solutions and suggestions that might help you:
-          </h3>
-        </div>
-        <div class="suggestion-results">
-          <SuggestionView :tabs="tabs" />
+      <h1>Comprehensive Analysis</h1>
+      <div v-if="!viewEvaluation">
+        <div class="analysis-suggestion">
+          <div>
+            <i class="pi pi-user" style="fontSize: 3rem"></i>
+            <h3>
+              Hello User!&nbsp; We noticed that the Air Quality status in your
+              surroundings is quite
+              {{ period.category }}!<br />It has an AQI rating of
+              {{ period.aqi }}!
+            </h3>
+          </div>
         </div>
 
-        <div class="suggestion-header" style="margin-top:1rem">
-          <h3>
-            Does the suggestions cannot help with your current situation?
-          </h3>
-        </div>
-        <div class="suggestion-query">
-          <h5>Enter the the reason below.</h5>
-          <form @submit.prevent="querySubmit">
-            <Textarea
-              v-model.trim="queryReason"
-              :autoResize="true"
-              rows="1"
-              cols="40"
-            />
-            <div>
-              <p-button
-                style="color:white"
-                label="Submit"
-                class="p-button-outlined submit-button"
-                type="submit"
+        <div class="analysis-suggestion suggestion" v-if="!viewEvaluation">
+          <div class="suggestion-header">
+            <h3>
+              We provided here some solutions and suggestions that might help
+              you:
+            </h3>
+          </div>
+          <div class="suggestion-results">
+            <SuggestionView :tabs="tabs" />
+          </div>
+
+          <div class="suggestion-header" style="margin-top:1rem">
+            <h3>
+              Does the suggestions cannot help with your current situation?
+            </h3>
+          </div>
+          <div class="suggestion-query">
+            <h5>Enter the the reason below.</h5>
+            <form @submit.prevent="querySubmit">
+              <Textarea
+                v-model.trim="queryReason"
+                :autoResize="true"
+                rows="1"
+                cols="40"
               />
-            </div>
-          </form>
+              <div>
+                <p-button
+                  style="color:white"
+                  label="Submit"
+                  class="p-button-outlined submit-button"
+                  type="submit"
+                />
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-
       <div class="analyze-loader" v-if="isLoading">
         <i
           class="pi pi-spin pi-spinner"
@@ -119,12 +121,16 @@ export default {
     },
     querySubmit() {
       console.log(this.queryReason);
-      this.viewEvaluation = true;
-      this.isLoading = true;
-      setTimeout(() => {
-        this.isLoading = false;
-        this.showEvaluation = true;
-      }, 2000);
+      if (this.queryReason == "") {
+        alert("Enter Something first :)");
+      } else {
+        this.viewEvaluation = true;
+        this.isLoading = true;
+        setTimeout(() => {
+          this.isLoading = false;
+          this.showEvaluation = true;
+        }, 2000);
+      }
     },
   },
 };
@@ -150,7 +156,7 @@ p {
 .back-button {
   justify-self: start;
   align-self: flex-start;
-  padding: 1rem 1.8rem 1rem 1.8rem;
+  padding: 0.6rem 1.8rem 0.6rem 1.8rem;
 }
 .analysis-content {
   height: auto;
@@ -223,7 +229,7 @@ form {
 }
 .analyze-loader {
   width: 100%;
-  padding: 6rem 0rem 8rem 0rem;
+  padding: 10rem 0rem 10rem 0rem;
   margin-top: 0.3rem;
   display: flex;
   flex-direction: column;

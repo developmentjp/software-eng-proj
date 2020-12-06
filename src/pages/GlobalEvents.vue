@@ -9,13 +9,13 @@
             v-if="chartChoice === 'country'"
             class="heading-image1"
             :src="flag"
-            alt="country-flag"
+            alt="flag"
           />
           <img
             v-if="chartChoice === 'world'"
             class="heading-image2"
             :src="flag"
-            alt="country-flag"
+            alt="world"
           />
         </div>
       </div>
@@ -46,17 +46,6 @@
       </form>
     </div>
 
-    <div v-if="!checkSubmit && !isLoading" class="no-data">
-      <h1 class="no-data-first-h1">
-        :(
-      </h1>
-      <div class="no-data-child">
-        <h1>No Data to display</h1>
-        <br />
-        <h3>Enter A value on the input field first.</h3>
-      </div>
-    </div>
-
     <div v-if="checkSubmit && !isLoading" class="chart-container">
       <div v-if="checkSubmit" class="pie">
         <CovidPie :search-query="searchQuery" :pie-data="pieData"></CovidPie>
@@ -78,6 +67,17 @@
 
     <div v-if="checkSubmit && isLoading" class="loading-chart">
       <i class="chart-loading pi pi-spin pi-spinner"></i>
+    </div>
+
+    <div v-if="!checkSubmit && !isLoading" class="no-data">
+      <h1 class="no-data-first-h1">
+        :(
+      </h1>
+      <div class="no-data-child">
+        <h1>No Data to display</h1>
+        <br />
+        <h3>Enter A value on the input field first.</h3>
+      </div>
     </div>
   </section>
 </template>
@@ -117,9 +117,6 @@ export default {
       } else {
         try {
           this.isLoading = true;
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 500);
           this.checkSubmit = false;
           if (this.searchQuery.toLowerCase() === "all") {
             this.chartChoice = "world";
@@ -130,6 +127,10 @@ export default {
           }
           const pieData = await this.fetchPieData(this.searchQuery);
           const chartData = await this.fetchChartData(this.searchQuery);
+
+          setTimeout(() => {
+            this.isLoading = false;
+          }, 500);
           this.pieData = pieData;
           this.chartData = chartData;
           this.checkSubmit = true;
@@ -140,7 +141,10 @@ export default {
             this.flag = this.pieData.countryInfo.flag;
           }
         } catch (err) {
+          this.flag = "";
+          this.headText = "";
           alert(err.message);
+          this.isLoading = false;
         }
       }
     },
@@ -229,8 +233,8 @@ section {
   display: flex;
 }
 .form-button-loading {
-  font-size: 2rem;
-  margin: 0rem 4rem 0rem 4rem;
+  font-size: 3rem;
+  margin: 0rem 4rem 0rem 3rem;
 }
 .input-text {
   width: 20rem;
@@ -250,7 +254,7 @@ section {
   margin-right: 2rem;
 }
 
-.no-data:first-child {
+.no-data-first-h1 {
   font-size: 5rem;
 }
 .no-data-child h1,
@@ -271,13 +275,14 @@ h3 {
 .loading-chart {
   height: 100%;
   width: 100%;
+  padding-top: 13rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .pie {
-  height: 100%;
+  height: auto;
   width: 30%;
 }
 .chart {
