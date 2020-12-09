@@ -31,7 +31,7 @@
 
           <Button
             v-if="!isLoading"
-            style="color: white; margin-left:0.5rem"
+            style="color: white;"
             class="submit-button p-button-secondary p-button-outlined"
             type="submit"
             label="Search Country"
@@ -239,6 +239,9 @@ section {
 .input-text {
   width: 20rem;
 }
+.submit-button {
+  margin-left: 0.5rem;
+}
 .no-data {
   height: 100%;
   width: 100%;
@@ -319,6 +322,9 @@ h3 {
   }
   .form-button-loading {
     font-size: 0rem;
+  }
+  .submit-button {
+    margin-left: 0rem;
   }
   .head-text {
     flex-direction: column;
