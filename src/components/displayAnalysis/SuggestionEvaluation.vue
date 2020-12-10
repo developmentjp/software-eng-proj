@@ -8,28 +8,32 @@
       <div class="dashboard">
         <div class="list">
           <div class="word">
-            <div class="word-title">
-              <h1 class="pos">Positive Words</h1>
+            <div class="word-title pos">
+              <h1>Positive Words</h1>
             </div>
             <div class="word-body">
-              <ul
-                v-for="positive in sentimentBody.positiveWords"
-                :key="positive"
-              >
-                <li>{{ positive }}</li>
+              <ul>
+                <li
+                  v-for="positive in sentimentBody.positiveWords"
+                  :key="positive"
+                >
+                  {{ positive }}
+                </li>
               </ul>
             </div>
           </div>
           <div class="word">
-            <div class="word-title">
-              <h1 class="neg">Negative Words</h1>
+            <div class="word-title neg">
+              <h1>Negative Words</h1>
             </div>
             <div class="word-body">
-              <ul
-                v-for="negative in sentimentBody.negativeWords"
-                :key="negative"
-              >
-                <li>{{ negative }}</li>
+              <ul>
+                <li
+                  v-for="negative in sentimentBody.negativeWords"
+                  :key="negative"
+                >
+                  {{ negative }}
+                </li>
               </ul>
             </div>
           </div>
@@ -39,8 +43,14 @@
         </div>
       </div>
 
-      <div>
-        <h1>solution</h1>
+      <div class="toxicity-body">
+        <div class="heading">
+          <div class="toxicity">
+            <h1>Toxicity Analysis</h1>
+            <p><i>*Analysis via Tensorflow.js Toxicity Model</i></p>
+          </div>
+        </div>
+        <ToxicityAnalysis :queryReason="queryReason" />
       </div>
     </div>
   </section>
@@ -49,10 +59,12 @@
 <script>
 import Chart from "primevue/chart";
 import Sentiment from "sentiment";
+import ToxicityAnalysis from "./ToxicityAnalysis";
 let sentiment = new Sentiment();
 export default {
   components: {
     Chart,
+    ToxicityAnalysis,
   },
   props: ["queryReason"],
   mounted() {
@@ -76,14 +88,12 @@ export default {
       if (this.queryReason) {
         const result = await sentiment.analyze(this.queryReason);
         this.sentimentResult = result;
-        console.log(this.sentimentResult);
         this.analyzeScore();
       } else {
         alert("No query");
       }
     },
     analyzeScore() {
-      console.log(this.sentimentResult.score);
       if (this.sentimentResult.score === null) {
         console.log("Failed analysis");
       } else {
@@ -126,6 +136,7 @@ section {
   padding: 1rem 1rem;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 h1,
 h2,
@@ -138,11 +149,25 @@ p {
   margin-block-end: 0rem;
 }
 .heading {
+  width: 100%;
+  margin: 0rem 0rem 0.5rem 0rem;
   display: flex;
+  justify-content: center;
   font-size: 1.5rem;
+}
+.heading .toxicity {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.heading .toxicity p {
+  font-size: 0.7rem;
 }
 .dashboard {
   display: flex;
+  margin-bottom: 0.5rem;
 }
 .dashboard .list,
 .chart {
@@ -151,22 +176,26 @@ p {
   display: flex;
 }
 .chart {
-  height: 100%;
-  background: violet;
+  height: auto;
   align-items: center;
   justify-content: center;
-  border: 2px solid black;
   border-radius: 1rem;
+  background: #16161d;
+}
+.p-chart:first-child {
+  height: auto;
+  width: 100%;
 }
 .list {
+  height: 10.4rem;
+  width: 50%;
   padding: 0rem !important;
   justify-content: space-between;
 }
 .list .word {
+  height: 100%;
   width: 50%;
-  height: 80%;
-  margin-right: 0.3rem;
-  border: 2px solid black;
+  margin: 0rem 0.3rem 0rem 0rem;
   border-radius: 1rem;
 }
 .word .word-title {
@@ -177,26 +206,67 @@ p {
   text-align: center;
   font-size: 1.3rem;
 }
-.word-title .pos {
+.pos {
+  border-bottom: 2px solid green;
+}
+.pos h1 {
   color: rgba(49, 255, 49, 0.644);
 }
-.word-title .neg {
+.neg {
+  border-bottom: 2px solid red;
+}
+.neg h1 {
   color: rgba(255, 47, 47, 0.692);
 }
 .word-body {
-  height: 75%;
+  height: 100%;
+  width: 100%;
   border-bottom-left-radius: 1rem;
   border-bottom-right-radius: 1rem;
-  padding: 1rem;
-  background: #16161d2a;
+  padding: 0.5rem;
+  background: #16161d;
 }
 .word ul {
+  height: 100%;
   margin: 0rem;
   padding: 0rem;
   list-style: none;
   text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  overflow-y: scroll;
+}
+.word ul::-webkit-scrollbar {
+  width: 0.2rem;
+}
+.word ul::-webkit-scrollbar-track {
+  background: #16161d;
+}
+.word ul::-webkit-scrollbar-thumb {
+  background: #ffffff;
 }
 .word ul li {
   width: 100%;
+}
+.toxicity-body {
+  padding: 0.5rem;
+  border-radius: 1rem;
+  background: #16161d;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+}
+
+@media only screen and (min-height: 720px) {
+  .list {
+    height: 9.4rem;
+  }
+}
+@media only screen and (min-height: 1080px) {
+  .list {
+    height: 15.3rem;
+  }
 }
 </style>
