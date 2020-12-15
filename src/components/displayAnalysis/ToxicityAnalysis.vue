@@ -1,22 +1,37 @@
 <template>
-  <Chart type="bar" :data="basicData" />
+  <div class="container">
+    <Chart type="bar" :data="basicData" />
+    <div class="analysis">
+      <p>Analysis Summary</p>
+      <p v-for="(matches, index) in probabilityMatches" :key="matches">
+        {{ field[index] }}: <i style="color: red">{{ matches.toString().toUpperCase() }}</i>
+      </p>
+    </div>
+    <div class="analysis">
+      <p>Analysis Summary</p>
+      <p v-for="(matches, index) in probabilityMatches" :key="matches">
+        {{ field[index] }}: <i style="color: red">{{ matches.toString().toUpperCase() }}</i>
+      </p>
+    </div>
+  </div>
 </template>
 
 <script>
-import "@tensorflow/tfjs";
-import * as toxicity from "@tensorflow-models/toxicity";
-import Chart from "primevue/chart";
+import '@tensorflow/tfjs';
+import * as toxicity from '@tensorflow-models/toxicity';
+import Chart from 'primevue/chart';
 export default {
   components: {
     Chart,
   },
-  props: ["queryReason"],
+  props: ['queryReason'],
   mounted() {
     this.calculateToxicity();
   },
   data() {
     return {
       basicData: null,
+      field: ['Identity Attack', 'Insult', 'Obscene', 'Severe Toxicity', 'Sexual Eplicit', 'Threat', 'Toxicity'],
       probabilityMatches: null,
     };
   },
@@ -32,7 +47,6 @@ export default {
       // });
       const model = await toxicity.load(threshold);
       const predictions = await model.classify(sentences);
-      console.log(predictions);
       const labels = [];
       const matches = [];
       const probs = [];
@@ -42,11 +56,7 @@ export default {
         // probs.push(predictions[obj].results[0].probabilities);
         let aveProb = 0;
         let count = 0;
-        for (
-          let prob = 0;
-          prob < predictions[obj].results[0].probabilities.length;
-          prob++
-        ) {
+        for (let prob = 0; prob < predictions[obj].results[0].probabilities.length; prob++) {
           aveProb += predictions[obj].results[0].probabilities[prob];
           count++;
         }
@@ -61,21 +71,13 @@ export default {
         }
       }
       console.log(matches);
-      this.probabilityMatches = matches;
+      this.probabilityMatches = [...matches];
       this.basicData = {
-        labels: [
-          "Identity Attack",
-          "Insult",
-          "Obscene",
-          "Severe Toxicity",
-          "Sexual Explicit",
-          "Threat",
-          "Toxicity",
-        ],
+        labels: ['Identity Attack', 'Insult', 'Obscene', 'Severe Toxicity', 'Sexual Explicit', 'Threat', 'Toxicity'],
         datasets: [
           {
-            label: "Prediction Probability",
-            backgroundColor: "#42A5F5",
+            label: 'Prediction Probability',
+            backgroundColor: '#42A5F5',
             data: [...probs],
           },
         ],
@@ -86,8 +88,72 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  height: 60%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .p-chart {
   height: 100%;
-  width: 70%;
+  width: 55%;
+  margin: 0rem 0.5rem 0rem 0.5rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: #0f0f18;
+}
+.analysis {
+  height: 100%;
+  margin: 0rem 0.5rem 0rem 0rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: #0f0f18;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 0.79rem;
+  line-height: 0rem;
+}
+@media only screen and (max-height: 667px) {
+  .p-chart {
+    width: 51% !important;
+  }
+  .analysis {
+    width: 100%;
+    font-size: 1rem;
+    padding: 2.5rem 2rem !important;
+  }
+}
+@media only screen and (max-height: 720px) {
+  .analysis {
+    font-size: 0.6rem;
+    padding: 2.3rem 1rem;
+  }
+}
+@media only screen and (min-height: 1080px) {
+  .p-chart {
+    width: 50%;
+  }
+  .analysis {
+    padding: 3.2rem;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .p-chart {
+    height: 100%;
+    width: 100%;
+    margin: 0rem 0.3rem 0.5rem 0.3rem;
+  }
+  .analysis {
+    height: 100%;
+    width: 100%;
+    margin: 0rem 0.3rem 0.5rem 0.3rem;
+  }
 }
 </style>

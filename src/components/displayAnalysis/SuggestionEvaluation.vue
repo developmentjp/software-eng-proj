@@ -13,10 +13,7 @@
             </div>
             <div class="word-body">
               <ul>
-                <li
-                  v-for="positive in sentimentBody.positiveWords"
-                  :key="positive"
-                >
+                <li v-for="positive in sentimentBody.positiveWords" :key="positive">
                   {{ positive }}
                 </li>
               </ul>
@@ -28,10 +25,7 @@
             </div>
             <div class="word-body">
               <ul>
-                <li
-                  v-for="negative in sentimentBody.negativeWords"
-                  :key="negative"
-                >
+                <li v-for="negative in sentimentBody.negativeWords" :key="negative">
                   {{ negative }}
                 </li>
               </ul>
@@ -57,25 +51,25 @@
 </template>
 
 <script>
-import Chart from "primevue/chart";
-import Sentiment from "sentiment";
-import ToxicityAnalysis from "./ToxicityAnalysis";
+import Chart from 'primevue/chart';
+import Sentiment from 'sentiment';
+import ToxicityAnalysis from './ToxicityAnalysis';
 let sentiment = new Sentiment();
 export default {
   components: {
     Chart,
     ToxicityAnalysis,
   },
-  props: ["queryReason"],
+  props: ['queryReason'],
   mounted() {
     this.analyzeSentiment();
   },
   data() {
     return {
-      anotherQueryReason: "",
+      anotherQueryReason: '',
       sentimentResult: null,
       sentimentBody: {
-        status: "",
+        status: '',
         words: null,
         positiveWords: null,
         negativeWords: null,
@@ -90,17 +84,17 @@ export default {
         this.sentimentResult = result;
         this.analyzeScore();
       } else {
-        alert("No query");
+        alert('No query');
       }
     },
     analyzeScore() {
       if (this.sentimentResult.score === null) {
-        console.log("Failed analysis");
+        console.log('Failed analysis');
       } else {
         if (this.sentimentResult.score > 0) {
-          this.sentimentBody.status = "Positive";
+          this.sentimentBody.status = 'Positive';
         } else {
-          this.sentimentBody.status = "Negative";
+          this.sentimentBody.status = 'Negative';
         }
         this.sentimentBody.words = [...this.sentimentResult.words];
         this.sentimentBody.positiveWords = [...this.sentimentResult.positive];
@@ -108,18 +102,12 @@ export default {
         let data1 = this.sentimentBody.positiveWords.length;
         let data2 = this.sentimentBody.negativeWords.length;
         this.chartData = {
-          labels: ["Positive Words", "Negative Words"],
+          labels: ['Positive Words', 'Negative Words'],
           datasets: [
             {
               data: [data1, data2],
-              backgroundColor: [
-                "rgba(49, 255, 49, 0.644)",
-                "rgba(255, 47, 47, 0.692)",
-              ],
-              hoverBackgroundColor: [
-                "rgba(0, 184, 0, 0.644)",
-                "rgba(148, 0, 0, 0.692)",
-              ],
+              backgroundColor: ['rgba(49, 255, 49, 0.644)', 'rgba(255, 47, 47, 0.692)'],
+              hoverBackgroundColor: ['rgba(0, 184, 0, 0.644)', 'rgba(148, 0, 0, 0.692)'],
             },
           ],
         };
@@ -132,6 +120,7 @@ export default {
 
 <style scoped>
 section {
+  height: auto;
   width: 100%;
   padding: 1rem 1rem;
   display: flex;
@@ -166,6 +155,7 @@ p {
   font-size: 0.7rem;
 }
 .dashboard {
+  height: 30%;
   display: flex;
   margin-bottom: 0.5rem;
 }
@@ -176,7 +166,7 @@ p {
   display: flex;
 }
 .chart {
-  height: auto;
+  /* max-height: 10rem; */
   align-items: center;
   justify-content: center;
   border-radius: 1rem;
@@ -187,13 +177,13 @@ p {
   width: 100%;
 }
 .list {
-  height: 10.4rem;
+  height: auto;
   width: 50%;
   padding: 0rem !important;
   justify-content: space-between;
 }
 .list .word {
-  height: 100%;
+  height: 125%;
   width: 50%;
   margin: 0rem 0.3rem 0rem 0rem;
   border-radius: 1rem;
@@ -219,7 +209,7 @@ p {
   color: rgba(255, 47, 47, 0.692);
 }
 .word-body {
-  height: 100%;
+  height: 80%;
   width: 100%;
   border-bottom-left-radius: 1rem;
   border-bottom-right-radius: 1rem;
@@ -250,6 +240,7 @@ p {
   width: 100%;
 }
 .toxicity-body {
+  height: 30%;
   padding: 0.5rem;
   border-radius: 1rem;
   background: #16161d;
@@ -259,6 +250,11 @@ p {
   align-items: center;
 }
 
+@media only screen and (max-height: 667px) {
+  .word {
+    height: 100% !important;
+  }
+}
 @media only screen and (min-height: 720px) {
   .list {
     height: 9.4rem;
@@ -267,6 +263,32 @@ p {
 @media only screen and (min-height: 1080px) {
   .list {
     height: 15.3rem;
+  }
+  .p-chart {
+    height: 10rem;
+  }
+}
+@media only screen and (max-width: 600px) {
+  section {
+    padding: 0rem;
+  }
+  .dashboard {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .chart,
+  .list {
+    width: 100% !important;
+  }
+  .list {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .word {
+    width: 100% !important;
+    margin-bottom: 0.5rem !important;
   }
 }
 </style>

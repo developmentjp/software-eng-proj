@@ -1,22 +1,15 @@
 <template>
   <section>
-    <p-button
-      style="color:white"
-      label="Return Back"
-      class="p-button-outlined back-button"
-      @click="goBack"
-    />
+    <p-button style="color:white" label="Return Back" class="p-button-outlined back-button" @click="goBack" />
     <div class="analysis-content">
       <h1>Comprehensive Analysis</h1>
-      <div v-if="!viewEvaluation">
+      <div v-if="!viewEvaluation" class="anaysis-container">
         <div class="analysis-suggestion">
           <div>
             <i class="pi pi-user" style="fontSize: 3rem"></i>
             <h3>
-              Hello User!&nbsp; We noticed that the Air Quality status in your
-              surroundings is quite
-              {{ period.category }}!<br />It has an AQI rating of
-              {{ period.aqi }}!
+              Hello User!&nbsp; We noticed that the Air Quality status in your surroundings is quite
+              {{ period.category }}!<br />It has an AQI rating of {{ period.aqi }}!
             </h3>
           </div>
         </div>
@@ -24,8 +17,7 @@
         <div class="analysis-suggestion suggestion" v-if="!viewEvaluation">
           <div class="suggestion-header">
             <h3>
-              We provided here some solutions and suggestions that might help
-              you:
+              We provided here some solutions and suggestions that might help you:
             </h3>
           </div>
           <div class="suggestion-results">
@@ -40,29 +32,16 @@
           <div class="suggestion-query">
             <h5>Enter the the reason below.</h5>
             <form @submit.prevent="querySubmit">
-              <Textarea
-                v-model.trim="queryReason"
-                :autoResize="true"
-                rows="1"
-                cols="40"
-              />
+              <Textarea v-model.trim="queryReason" :autoResize="true" rows="1" cols="40" />
               <div>
-                <p-button
-                  style="color:white"
-                  label="Submit"
-                  class="p-button-outlined submit-button"
-                  type="submit"
-                />
+                <p-button style="color:white" label="Submit" class="p-button-outlined submit-button" type="submit" />
               </div>
             </form>
           </div>
         </div>
       </div>
       <div class="analyze-loader" v-if="isLoading">
-        <i
-          class="pi pi-spin pi-spinner"
-          style="fontSize: 8rem;margin-bottom:1rem"
-        ></i>
+        <i class="pi pi-spin pi-spinner" style="fontSize: 8rem;margin-bottom:1rem"></i>
         <h1>Analyzing Your Answer</h1>
       </div>
       <div class="suggestionEvaluation" v-if="showEvaluation">
@@ -73,26 +52,26 @@
 </template>
 
 <script>
-import suggestiondata from "../datasets/suggestiondata";
-import SuggestionView from "./SuggestionView";
-import SuggestionEvaluation from "./SuggestionEvaluation";
+import suggestiondata from '../datasets/suggestiondata';
+import SuggestionView from './SuggestionView';
+import SuggestionEvaluation from './SuggestionEvaluation';
 
-import Textarea from "primevue/textarea";
+import Textarea from 'primevue/textarea';
 export default {
   components: {
     SuggestionView,
     SuggestionEvaluation,
     Textarea,
   },
-  props: ["period"],
-  emits: ["show-solution"],
+  props: ['period'],
+  emits: ['show-solution'],
   mounted() {
     this.showSuggestions();
   },
   data() {
     return {
       tabs: null,
-      queryReason: "",
+      queryReason: '',
       viewEvaluation: false,
       showEvaluation: false,
       isLoading: false,
@@ -100,7 +79,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.$emit("show-solution", false);
+      this.$emit('show-solution', false);
     },
     showSuggestions() {
       if (this.period.category) {
@@ -121,8 +100,8 @@ export default {
     },
     querySubmit() {
       console.log(this.queryReason);
-      if (this.queryReason == "") {
-        alert("Enter Something first :)");
+      if (this.queryReason == '') {
+        alert('Enter Something first :)');
       } else {
         this.viewEvaluation = true;
         this.isLoading = true;
@@ -171,6 +150,9 @@ p {
   margin-block-start: 0rem;
   margin-block-end: 0.5rem;
 }
+.anaysis-container {
+  width: 100%;
+}
 .analysis-suggestion {
   height: auto;
   width: 100%;
@@ -191,6 +173,9 @@ p {
 }
 .analysis-suggestion div h3 {
   margin-left: 1rem;
+  font-size: 0.9rem;
+  width: 100%;
+  text-align: center;
 }
 .suggestion {
   height: 100%;
@@ -268,6 +253,12 @@ form {
   }
   .analysis-suggestion i {
     margin-right: 1rem;
+  }
+  .analysis-suggestion div h3 {
+    margin-left: 1rem;
+    font-size: 1.3rem;
+    width: 100%;
+    text-align: center;
   }
 }
 </style>
