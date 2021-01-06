@@ -6,7 +6,7 @@ import router from './router'
 import store from './store/index'
 
 // import "primevue/resources/themes/saga-green/theme.css";
-import 'primevue/resources/themes/md-dark-deeppurple/theme.css'
+import 'primevue/resources/themes/vela-blue/theme.css'
 import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
 
