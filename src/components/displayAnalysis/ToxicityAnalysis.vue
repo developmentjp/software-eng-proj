@@ -1,16 +1,28 @@
 <template>
-	<div class="container">
-		<Chart type="bar" :data="basicData" />
-		<div class="analysis">
-			<p>Analysis Summary</p>
-			<p v-for="(matches, index) in probabilityMatches" :key="matches">
-				{{ field[index] }}: <i style="color: red">{{ matches.toString().toUpperCase() }}</i>
-			</p>
+	<div class="toxicity" v-if="!displayToxicity">
+		<div class="toxicity__chart">
+			<Chart type="bar" :data="basicData" />
 		</div>
-		<div @click="setEvaluationTrue" class="analysis-btn-container">
+		<div class="toxicity__analysis">
+			<p>Analysis Summary</p>
+			<div class="toxicity__analysis__text">
+				<div class="toxicity__analysis__text-label">
+					<p v-for="(matches, index) in probabilityMatches" :key="matches">{{ field[index] }}:</p>
+				</div>
+				<div class="toxicity__analysis__text-output">
+					<i style="color: red" v-for="(matches, index) in probabilityMatches" :key="index">{{
+						matches.toString().toUpperCase()
+					}}</i>
+				</div>
+			</div>
+		</div>
+		<div @click="setEvaluationTrue" class="toxicity__btn__container">
 			<h3 class="analysis-btn-header">Click To View New Solutions</h3>
 			<i class="pi pi-arrow-circle-right analysis-btn" style="fontSize: 4rem"></i>
 		</div>
+	</div>
+	<div class="toxicity toxicity__loader" v-if="displayToxicity">
+		<i class="pi pi-spin pi-spinner toxicity__loader__icon"></i>
 	</div>
 </template>
 
@@ -23,12 +35,18 @@ export default {
 		Chart,
 	},
 	props: ['queryReason'],
-	emits: ['change-solution-view'],
+	emits: ['changeSolutionView'],
 	mounted() {
 		this.calculateToxicity()
 	},
+	watch: {
+		probabilityMatches() {
+			this.displayToxicity = false
+		},
+	},
 	data() {
 		return {
+			displayToxicity: true,
 			basicData: null,
 			field: ['Identity Attack', 'Insult', 'Obscene', 'Severe Toxicity', 'Sexual Eplicit', 'Threat', 'Toxicity'],
 			probabilityMatches: null,
@@ -37,7 +55,6 @@ export default {
 	methods: {
 		setEvaluationTrue() {
 			console.log('logo clicked')
-			this.$store.dispatch('changeViewEvaluation', true)
 			this.$emit('change-solution-view', false)
 		},
 		async calculateToxicity() {
@@ -51,6 +68,14 @@ export default {
 			// });
 			const model = await toxicity.load(threshold)
 			const predictions = await model.classify(sentences)
+			// handles loader and storing to global sstore
+			// if (model === null && predictions === null) {
+			// 	// this.$emit('display-toxicity', false)
+			// 	this.$store.dispatch('changeViewEvaluation', false)
+			// 	console.log(this.$store.getters['viewEvaluationGetter'])
+			// 	this.displayToxicity = true
+			// 	console.log(this.displayToxicity)
+			// } else { }
 			const labels = []
 			const matches = []
 			const probs = []
@@ -65,9 +90,6 @@ export default {
 					count++
 				}
 				aveProb = aveProb / count
-				// let value = toString(aveProb);
-				// console.log(value.substr(0, 4));
-				// aveProb = parseFloat(value);
 				if (aveProb > 1) {
 					probs.push(1.0)
 				} else {
@@ -92,86 +114,103 @@ export default {
 </script>
 
 <style scoped>
-.container {
-	height: 60%;
+.toxicity {
+	height: 100%;
 	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.toxicity__loader {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.toxicity__chart {
+	flex: 2;
+	height: 100%;
+	padding: 0.5rem;
+	background: #0f0f188f;
+	border-radius: 0.5rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 .p-chart {
-	height: 100%;
-	width: 55%;
-	margin: 0rem 0.5rem 0rem 0.5rem;
-	padding: 2rem;
-	border-radius: 1rem;
-	background: #0f0f18;
+	width: 100%;
 }
-.analysis {
+.toxicity__analysis {
+	flex: 1;
 	height: 100%;
-	margin: 0rem 0.5rem 0rem 0rem;
-	/* padding: 1rem; */
-	border-radius: 1rem;
-	background: #0f0f18;
+	padding: 1rem 0.5rem;
+	margin: 0rem 0.5rem 0rem 0.5rem;
+	background: #0f0f188f;
+	border-radius: 0.5rem;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	flex-direction: column;
-	font-size: 0.79rem;
-	line-height: 0rem;
+	font-size: 1.3rem;
 }
-.analysis-btn-container {
-	width: 90%;
+.toxicity__analysis p {
+	margin-block-end: 0rem;
+	margin-block-start: 0rem;
+}
+.toxicity__btn__container {
+	flex: 1;
+	height: 100%;
+	padding: 0.5rem;
+	background: #0f0f188f;
+	border-radius: 0.5rem;
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
 	align-items: center;
+	font-size: 1rem;
+}
+.toxicity__btn__container:hover {
 	cursor: pointer;
+	color: #6767818f;
 }
-.analysis-btn-header {
-	text-align: center;
-	font-size: 0.9rem;
+.toxicity__analysis__text {
+	height: 100%;
+	width: 100%;
+	padding: 1.5rem 1rem;
+	display: flex;
+	justify-content: space-between;
 }
-.analysis-btn-container:hover {
-	color: #323252;
+.toxicity__analysis__text-label {
+	display: flex;
+	flex-direction: column;
 }
-@media only screen and (max-height: 667px) {
-	.p-chart {
-		width: 51% !important;
-	}
-	.analysis {
-		width: 100%;
-		font-size: 1rem;
-		padding: 2rem 2rem !important;
-	}
+.toxicity__analysis__text-output {
+	display: flex;
+	flex-direction: column;
 }
-@media only screen and (max-height: 720px) {
-	.analysis {
-		font-size: 0.6rem;
-		padding: 2.3rem 1rem;
-	}
-}
-@media only screen and (min-height: 1080px) {
-	.p-chart {
-		width: 50%;
-	}
-	.analysis {
-		padding: 3.2rem;
-	}
-}
+
 @media only screen and (max-width: 600px) {
-	.container {
-		display: flex;
+	.toxicity {
 		flex-direction: column;
 	}
-	.p-chart {
-		height: 100%;
+	.toxicity__chart,
+	.toxicity__analysis,
+	.toxicity__btn__container {
 		width: 100%;
-		margin: 0rem 0.3rem 0.5rem 0.3rem;
 	}
-	.analysis {
-		height: 100%;
-		width: 100%;
-		margin: 0rem 0.3rem 0.5rem 0.3rem;
+	.toxicity__chart {
+		height: 50rem;
+	}
+	.toxicity__analysis {
+		margin: 0.5rem 0rem;
+		font-size: 1rem;
+	}
+	.toxicity__loader__icon {
+		font-size: 3rem;
+	}
+}
+@media only screen and (min-height: 720px) {
+	.list {
+		height: 9.4rem;
 	}
 }
 </style>

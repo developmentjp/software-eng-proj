@@ -4,7 +4,7 @@
 			<h1>Context Evaluation Report &nbsp;</h1>
 			<!-- <i class="pi pi-briefcase" style="fontSize: 1.5rem"></i> -->
 		</div>
-		<div class="body">
+		<div class="body-container">
 			<div class="dashboard">
 				<div class="list">
 					<div class="word">
@@ -39,7 +39,7 @@
 
 			<div class="toxicity-body">
 				<div class="heading">
-					<div class="toxicity">
+					<div class="toxicity-header">
 						<h1>Toxicity Analysis</h1>
 						<p><i>*Analysis via Tensorflow.js Toxicity Model</i></p>
 					</div>
@@ -124,7 +124,7 @@ export default {
 
 <style scoped>
 section {
-	height: auto;
+	height: 100%;
 	width: 100%;
 	padding: 1rem 1rem;
 	display: flex;
@@ -148,23 +148,29 @@ p {
 	justify-content: center;
 	font-size: 1.5rem;
 }
-.heading .toxicity {
+.heading .toxicity-header {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }
-.heading .toxicity p {
+.heading .toxicity-header p {
 	font-size: 0.7rem;
 }
+.body-container {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
 .dashboard {
-	height: 30%;
+	height: auto;
 	display: flex;
 	margin-bottom: 0.5rem;
 }
 .dashboard .list,
 .chart {
+	height: auto;
 	width: 50%;
 	padding: 0.5rem;
 	display: flex;
@@ -187,10 +193,12 @@ p {
 	justify-content: space-between;
 }
 .list .word {
-	height: 125%;
+	height: 100%;
 	width: 50%;
 	margin: 0rem 0.3rem 0rem 0rem;
 	border-radius: 1rem;
+	display: flex;
+	flex-direction: column;
 }
 .word .word-title {
 	padding: 0.5rem;
@@ -213,7 +221,8 @@ p {
 	color: rgba(255, 47, 47, 0.692);
 }
 .word-body {
-	height: 80%;
+	flex: 1;
+	/* height: 80%; */
 	width: 100%;
 	border-bottom-left-radius: 1rem;
 	border-bottom-right-radius: 1rem;
@@ -245,8 +254,10 @@ p {
 	width: 100%;
 }
 .toxicity-body {
-	height: 30%;
+	/* height: 30%; */
+	flex: 1;
 	padding: 0.5rem;
+	padding-top: 1rem;
 	border-radius: 1rem;
 	background: #16161d;
 	display: flex;

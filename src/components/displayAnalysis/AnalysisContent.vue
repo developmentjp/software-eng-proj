@@ -1,15 +1,17 @@
 <template>
 	<section>
-		<p-button style="color:white" label="Return Back" class="p-button-outlined back-button" @click="goBack" />
 		<div class="analysis-content">
-			<h1>Comprehensive Analysis</h1>
+			<p-button style="color:white" label="Return Back" class="p-button-outlined back-button" @click="goBack" />
+			<!-- <h1>Comprehensive Analysis</h1> -->
 			<div v-if="!viewEvaluation" class="anaysis-container">
 				<div class="analysis-suggestion">
+					<h1>Comprehensive Analysis</h1>
 					<div>
 						<i class="pi pi-user" style="fontSize: 3rem"></i>
 						<h3>
 							Hello User!&nbsp; We noticed that the Air Quality status in your surroundings is quite
-							{{ period.category }}!<br />It has an AQI rating of {{ period.aqi }}!
+							<span>{{ period.category }}!</span>
+							<!-- <br />It has an AQI rating of {{ period.aqi }}! -->
 						</h3>
 					</div>
 				</div>
@@ -24,22 +26,25 @@
 						<SuggestionView :tabs="tabs" />
 					</div>
 
-					<div class="suggestion-header" style="margin-top:1rem">
-						<h3>
-							Does the suggestions cannot help with your current situation?
-						</h3>
-					</div>
-					<div class="suggestion-query">
-						<h5>Enter the the reason below.</h5>
-						<form @submit.prevent="querySubmit">
-							<Textarea v-model.trim="queryReason" :autoResize="true" rows="1" cols="40" />
-							<div>
-								<p-button style="color:white" label="Submit" class="p-button-outlined submit-button" type="submit" />
-							</div>
-						</form>
+					<div class="suggestion__question__container">
+						<div class="suggestion__question__header" style="margin-top:1rem">
+							<h3>
+								Does the suggestions cannot help with your current situation?
+							</h3>
+						</div>
+						<div class="suggestion-query">
+							<h5>Enter the the reason below.</h5>
+							<form @submit.prevent="querySubmit">
+								<Textarea v-model.trim="queryReason" :autoResize="true" rows="5" cols="40" autofocus />
+								<div>
+									<p-button style="color:white" label="Submit" class="p-button-outlined submit-button" type="submit" />
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
+
 			<div class="analyze-loader" v-if="isLoading">
 				<i class="pi pi-spin pi-spinner" style="fontSize: 8rem;margin-bottom:1rem"></i>
 				<h1>Analyzing Your Answer</h1>
@@ -92,6 +97,7 @@ export default {
 		modifyView(value) {
 			this.showEvaluation = value
 			this.viewEvaluation = value
+			this.queryReason = null
 		},
 		showSuggestions() {
 			if (this.period.category) {
@@ -145,17 +151,18 @@ p {
 	margin-block-end: 0rem;
 }
 .back-button {
+	margin-bottom: 1rem;
 	justify-self: start;
 	align-self: flex-start;
 	padding: 0.6rem 1.8rem 0.6rem 1.8rem;
 }
 .analysis-content {
-	height: auto;
+	height: 100%;
 	width: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	/* justify-content: center; */
 }
 .analysis-content h1 {
 	font-size: 1.8rem;
@@ -163,7 +170,10 @@ p {
 	margin-block-end: 0.5rem;
 }
 .anaysis-container {
+	height: 100%;
 	width: 100%;
+	display: flex;
+	flex-direction: column;
 }
 .analysis-suggestion {
 	height: auto;
@@ -174,6 +184,7 @@ p {
 	border-radius: 0.5rem;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 }
 .analysis-suggestion h3 {
 	margin-block-start: 0rem;
@@ -184,13 +195,27 @@ p {
 	align-items: center;
 }
 .analysis-suggestion div h3 {
-	margin-left: 1rem;
 	font-size: 0.9rem;
 	width: 100%;
 	text-align: center;
 }
+.suggestion__question__container {
+	width: 100%;
+	padding: 2rem 0rem;
+	margin-top: 2rem;
+	background: #1c1c25;
+	border-radius: 1rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.suggestion__question__header {
+	margin-bottom: 1rem;
+}
 .suggestion {
-	height: 100%;
+	/* height: 100%; */
+	flex: 1;
 	margin-top: 0.2rem;
 }
 .suggestion-header {
@@ -225,6 +250,7 @@ form {
 	padding: 0.5rem;
 }
 .analyze-loader {
+	height: 100%;
 	width: 100%;
 	padding: 10rem 0rem 10rem 0rem;
 	margin-top: 0.3rem;
@@ -238,7 +264,7 @@ form {
 }
 
 .suggestionEvaluation {
-	height: auto;
+	height: 100%;
 	width: 100%;
 	margin-top: 0.2rem;
 	display: flex;
@@ -254,6 +280,9 @@ form {
 		margin: 1rem 0rem 1rem 0rem;
 		justify-self: center;
 		align-self: center;
+	}
+	.analysis-suggestion h1 {
+		font-size: 1.5rem;
 	}
 }
 @media only screen and (min-height: 1080px) {
@@ -271,6 +300,38 @@ form {
 		font-size: 1.3rem;
 		width: 100%;
 		text-align: center;
+	}
+	.suggestion {
+		/* height: 100%; */
+	}
+	.back-button {
+		margin-bottom: 2.3rem;
+		margin-left: 0.1rem;
+	}
+}
+@media only screen and (min-height: 900px) {
+	.analysis-content {
+		/* margin-top: 1rem; */
+		font-size: 1.3rem;
+	}
+	.analysis-suggestion {
+		padding: 2rem;
+	}
+	.analysis-suggestion i {
+		margin-right: 1rem;
+	}
+	.analysis-suggestion div h3 {
+		margin-left: 1rem;
+		font-size: 1.3rem;
+		width: 100%;
+		text-align: center;
+	}
+	.suggestion {
+		/* height: 100%; */
+	}
+	.back-button {
+		margin-bottom: 2rem;
+		margin-left: 0.1rem;
 	}
 }
 </style>

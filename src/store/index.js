@@ -3,7 +3,7 @@ import { createStore } from 'vuex'
 const store = createStore({
 	state() {
 		return {
-			viewEvaluation: false,
+			displaySuggestionEvaluation: false,
 		}
 	},
 	actions: {
@@ -13,7 +13,7 @@ const store = createStore({
 	},
 	mutations: {
 		setEvaluation(state, payload) {
-			state.viewEvaluation = payload
+			state.displaySuggestionEvaluation = payload
 		},
 	},
 	getters: {

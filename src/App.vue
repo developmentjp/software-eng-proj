@@ -1,73 +1,78 @@
 <template>
-  <nav-bar></nav-bar>
-  <div class="router">
-    <router-view> </router-view>
-  </div>
+	<nav-bar></nav-bar>
+	<div class="router">
+		<router-view> </router-view>
+	</div>
 </template>
 
 <script>
-import NavBar from "./components/layouts/NavBar.vue";
+import NavBar from './components/layouts/NavBar.vue'
 export default {
-  components: {
-    NavBar,
-  },
-};
+	components: {
+		NavBar,
+	},
+}
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap');
 :root {
-  height: 100% !important;
+	height: 100% !important;
+}
+html,
+body {
+	font-family: 'Poppins', sans-serif;
 }
 body {
-  background: rgb(29, 33, 37);
-  /* background: red; */
-  font-size: 16px;
-  font-family: "Open Sans";
-  color: white;
-  margin: 0;
-  padding: 0;
-  height: 100%;
+	background: rgb(29, 33, 37);
+	/* background: red; */
+	font-size: 16px;
+	/* font-family: "Open Sans"; */
+	color: white;
+	margin: 0;
+	padding: 0;
+	height: 100%;
 }
 
 body::-webkit-scrollbar {
-  width: 0.5rem;
+	width: 0.5rem;
 }
 
 body::-webkit-scrollbar-track {
-  background: #23232e;
+	background: #23232e;
 }
 
 body::-webkit-scrollbar-thumb {
-  background: #ffffff;
+	background: #ffffff;
 }
 
 .router {
-  /* background: blue; */
-  /* height: 100%; change when necessary*/
-  height: auto;
-  margin-left: 5rem;
+	/* background: blue; */
+	/* height: 100%; change when necessary*/
+	height: auto;
+	margin-left: 5rem;
 }
 
 @media only screen and (max-width: 600px) {
-  .router {
-    margin: 0rem 0rem 5rem 0rem;
-  }
+	.router {
+		margin: 0rem 0rem 5rem 0rem;
+	}
 }
 
 /*Transitions*/
 /* Enter and leave animations can use different durations and timing functions.              */
 .slide-fade-enter-active {
-  transition: all 1.3s ease-in;
+	transition: all 1.3s ease-in;
 }
 
 .slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+	transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  transform: translateY(-500px);
-  opacity: 0;
+	transform: translateY(-500px);
+	opacity: 0;
 }
 </style>
