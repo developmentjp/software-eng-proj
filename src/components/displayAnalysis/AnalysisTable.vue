@@ -72,13 +72,7 @@
 				</tr>
 			</tbody>
 		</table>
-
-		<p-button
-			style="color:white; padding: 1rem; margin-top:1rem"
-			label="View Solutions and Suggestions"
-			class="p-button-outlined r-show-button"
-			@click="check"
-		/>
+		<button class="table-view__button" @click="check">View Solutions and Suggestions</button>
 	</section>
 </template>
 
@@ -103,6 +97,21 @@ section {
 	border: 3px solid #16161d83;
 	border-radius: 0.5rem;
 	padding: 1rem;
+}
+.table-view__button {
+	padding: 0.5rem 2rem;
+	margin-top: 1rem;
+	border: 1px solid white;
+	border-radius: 0.25rem;
+	font-size: 1.5rem;
+	background: white;
+	color: #1c1c25;
+}
+.table-view__button:hover {
+	background: #3b3b4e;
+	border: 1px solid #3b3b4e;
+	color: white;
+	cursor: pointer;
 }
 table {
 	border: 1px solid #ccc;

@@ -1,7 +1,23 @@
 <template>
+	<ToPdf v-if="viewModal" :viewModal="viewModal" @closeModal="closeModalView" />
 	<section>
 		<div class="analysis-content">
-			<p-button style="color:white" label="Return Back" class="p-button-outlined back-button" @click="goBack" />
+			<div class="analysis-content__btn__container">
+				<div class="back__button" @click="goBack">
+					<i class="pi pi-angle-double-left" style="fontSize: 2rem"></i>
+					<p>&nbsp;Back</p>
+				</div>
+				<div class="pdf__button__container">
+					<div class="pdf__button" @click="viewPdfSummary">
+						<p>&nbsp;View Session Summary</p>
+						<i class="pi pi-eye" style="fontSize: 2rem; marginLeft:0.5rem"></i>
+					</div>
+					<div class="pdf__button--download">
+						<p>&nbsp;Download PDF Copy</p>
+						<i class="pi pi-download" style="fontSize: 2rem; marginLeft:0.5rem"></i>
+					</div>
+				</div>
+			</div>
 			<!-- <h1>Comprehensive Analysis</h1> -->
 			<div v-if="!viewEvaluation" class="anaysis-container">
 				<div class="analysis-suggestion">
@@ -37,7 +53,7 @@
 							<form @submit.prevent="querySubmit">
 								<Textarea v-model.trim="queryReason" :autoResize="true" rows="5" cols="40" autofocus />
 								<div>
-									<p-button style="color:white" label="Submit" class="p-button-outlined submit-button" type="submit" />
+									<button class="suggestion-query__submit__button" type="submit">Submit</button>
 								</div>
 							</form>
 						</div>
@@ -57,9 +73,10 @@
 </template>
 
 <script>
-import suggestiondata from '../datasets/suggestiondata'
+// import suggestiondata from '../datasets/suggestiondata'
 import SuggestionView from './SuggestionView'
 import SuggestionEvaluation from './SuggestionEvaluation'
+import ToPdf from '../displayPDF/ToPdf'
 
 import Textarea from 'primevue/textarea'
 export default {
@@ -67,9 +84,10 @@ export default {
 		SuggestionView,
 		SuggestionEvaluation,
 		Textarea,
+		ToPdf,
 	},
 	props: ['period'],
-	emits: ['show-solution'],
+	emits: ['showSolution', 'show-solution'],
 	mounted() {
 		this.showSuggestions()
 	},
@@ -80,16 +98,9 @@ export default {
 			viewEvaluation: false,
 			showEvaluation: false,
 			isLoading: false,
+			viewModal: false,
 		}
 	},
-	// updated() {
-	// 	const checker = this.$store.getters['viewEvaluationGetter']
-	// 	if (checker) {
-	// 		this.viewEvaluation = !checker
-	// 		this.showEvaluation = !checker
-	// 	}
-	// 	console.log(checker)
-	// },
 	methods: {
 		goBack() {
 			this.$emit('show-solution', false)
@@ -98,26 +109,54 @@ export default {
 			this.showEvaluation = value
 			this.viewEvaluation = value
 			this.queryReason = null
+			// fetching data from store uncomment when production/real test reactivity
+			const val = this.$store.getters['firestore/getState'] //fetching data from store
+			if (val.toxicitySuggestions !== null) {
+				//merging toxicity suggestions with airquality suggestions
+				console.log(val.toxicitySuggestions)
+				this.tabs = val.airQualitySuggestions.concat(val.toxicitySuggestions)
+				console.log(this.tabs)
+			} else {
+				this.tabs = val.airQualitySuggestions
+			}
 		},
 		showSuggestions() {
 			if (this.period.category) {
-				suggestiondata.forEach((category) => {
-					if (category.superTitle === this.period.category) {
-						const body = []
-						category.body.forEach((item) => {
-							body.push({
-								title: item.title,
-								content: item.content,
-							})
-						})
-						this.tabs = [...body]
-						return
-					}
+				// suggestiondata.forEach((category) => {
+				// 	if (category.superTitle === this.period.category) {
+				// 		const body = []
+				// 		category.body.forEach((item) => {
+				// 			body.push({
+				// 				title: item.title,
+				// 				content: item.content,
+				// 			})
+				// 		})
+				// 		this.tabs = [...body]
+				// 		console.log(this.tabs)
+				// 		return
+				// 	}
+				// })
+
+				// fetching data from store uncomment when production/real test reactivity
+				const val = this.$store.getters['firestore/getState'] //fetching data from store
+				if (val.toxicitySuggestions !== null) {
+					//merging toxicity suggestions with airquality suggestions
+					this.tabs = val.airQualitySuggestions.concat(val.toxicitySuggestions)
+					console.log(this.tabs)
+				} else {
+					this.tabs = val.airQualitySuggestions
+				}
+			}
+			try {
+				this.$store.dispatch('pdf/storeSuggestion', {
+					suggestion: this.tabs,
 				})
+			} catch (err) {
+				alert('failed to store data', err)
+				console.log(err)
 			}
 		},
 		querySubmit() {
-			console.log(this.queryReason)
 			if (this.queryReason == '') {
 				alert('Enter Something first :)')
 			} else {
@@ -128,6 +167,12 @@ export default {
 					this.showEvaluation = true
 				}, 2000)
 			}
+		},
+		viewPdfSummary() {
+			this.viewModal = true
+		},
+		closeModalView() {
+			this.viewModal = false
 		},
 	},
 }
@@ -150,11 +195,53 @@ p {
 	margin-block-start: 0rem;
 	margin-block-end: 0rem;
 }
-.back-button {
+.analysis-content__btn__container {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
 	margin-bottom: 1rem;
-	justify-self: start;
-	align-self: flex-start;
-	padding: 0.6rem 1.8rem 0.6rem 1.8rem;
+}
+.back__button {
+	padding: 0.5rem 1rem;
+	display: flex;
+	border: 1px solid white;
+	border-radius: 0.25rem;
+}
+.back__button:hover {
+	background: white;
+	border: 1px solid white;
+	color: #23232e;
+	cursor: pointer;
+}
+.pdf__button__container {
+	display: flex;
+}
+.pdf__button {
+	padding: 0.5rem 1rem;
+	margin-right: 0.5rem;
+	display: flex;
+	border: 1px solid white;
+	border-radius: 0.25rem;
+}
+.pdf__button:hover {
+	background: white;
+	border: 1px solid white;
+	color: #23232e;
+	cursor: pointer;
+}
+.pdf__button--download {
+	padding: 0.5rem 1rem;
+	display: flex;
+	border: 1px solid white;
+	border-radius: 0.25rem;
+	color: #1c1c25;
+	background: white;
+}
+.pdf__button--download:hover {
+	background: #3b3b4e;
+	border: 1px solid #3b3b4e;
+	color: white;
+	cursor: pointer;
 }
 .analysis-content {
 	height: 100%;
@@ -244,10 +331,20 @@ form {
 	align-items: center;
 }
 
-.submit-button {
-	width: 7rem;
-	margin: 1rem 0rem 0rem 0rem;
-	padding: 0.5rem;
+.suggestion-query__submit__button {
+	padding: 0.5rem 2rem;
+	margin-top: 1rem;
+	border: 1px solid white;
+	border-radius: 0.25rem;
+	font-size: 1.5rem;
+	background: white;
+	color: #1c1c25;
+}
+.suggestion-query__submit__button:hover {
+	background: #3b3b4e;
+	border: 1px solid #3b3b4e;
+	color: white;
+	cursor: pointer;
 }
 .analyze-loader {
 	height: 100%;
@@ -276,10 +373,32 @@ form {
 	border-radius: 0.5rem;
 }
 @media only screen and (max-width: 600px) {
-	.back-button {
+	.analysis-content__btn__container {
+		padding: 0rem 1rem;
 		margin: 1rem 0rem 1rem 0rem;
-		justify-self: center;
-		align-self: center;
+		flex-direction: column;
+	}
+	.back__button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.pdf__button__container {
+		flex-direction: column;
+	}
+	.pdf__button {
+		margin: 0.5rem 0rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.pdf__button--download {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.suggestion-query__submit__button {
+		font-size: 1.25rem;
 	}
 	.analysis-suggestion h1 {
 		font-size: 1.5rem;
@@ -301,10 +420,7 @@ form {
 		width: 100%;
 		text-align: center;
 	}
-	.suggestion {
-		/* height: 100%; */
-	}
-	.back-button {
+	.analysis-content__btn__container {
 		margin-bottom: 2.3rem;
 		margin-left: 0.1rem;
 	}
@@ -326,12 +442,9 @@ form {
 		width: 100%;
 		text-align: center;
 	}
-	.suggestion {
-		/* height: 100%; */
-	}
-	.back-button {
-		margin-bottom: 2rem;
-		margin-left: 0.1rem;
+	.analysis-content__btn__container {
+		margin-bottom: 1rem;
+		margin-left: 0.3rem;
 	}
 }
 </style>

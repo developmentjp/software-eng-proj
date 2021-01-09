@@ -1,24 +1,30 @@
 import { createStore } from 'vuex'
+import pdfCopyModule from './modules/pdfCopy/index'
+import fireStoreModule from './modules/fireStore/index'
 
 const store = createStore({
+	modules: {
+		pdf: pdfCopyModule,
+		firestore: fireStoreModule,
+	},
 	state() {
 		return {
-			displaySuggestionEvaluation: false,
+			displayModal: false,
 		}
 	},
 	actions: {
-		changeViewEvaluation(context, data) {
-			context.commit('setEvaluation', data)
+		viewPdfModal(context, data) {
+			context.commit('viewPdfModal', data)
 		},
 	},
 	mutations: {
-		setEvaluation(state, payload) {
-			state.displaySuggestionEvaluation = payload
+		viewPdfModal(state, payload) {
+			state.displayModal = payload
 		},
 	},
 	getters: {
 		viewEvaluationGetter(state) {
-			return state.viewEvaluation
+			return state.displayModal
 		},
 	},
 })

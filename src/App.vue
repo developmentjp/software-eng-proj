@@ -16,7 +16,7 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
 :root {
 	height: 100% !important;
 }
@@ -26,7 +26,7 @@ body {
 }
 body {
 	background: rgb(29, 33, 37);
-	/* background: red; */
+	/* background: #242c39; */
 	font-size: 16px;
 	/* font-family: "Open Sans"; */
 	color: white;
@@ -46,7 +46,6 @@ body::-webkit-scrollbar-track {
 body::-webkit-scrollbar-thumb {
 	background: #ffffff;
 }
-
 .router {
 	/* background: blue; */
 	/* height: 100%; change when necessary*/

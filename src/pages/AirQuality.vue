@@ -47,17 +47,21 @@ export default {
 	},
 	methods: {
 		getNavigation() {
-			navigator.geolocation.getCurrentPosition(async (position) => {
-				this.long = await position.coords.longitude
-				this.lat = await position.coords.latitude
-				if (this.lat === null && this.long === null) {
-					this.displayAirQuality = true
-				} else {
-					this.displayAirQuality = false
-					console.log(this.long, this.lat)
-					this.checkNavigation()
-				}
-			})
+			try {
+				navigator.geolocation.getCurrentPosition(async (position) => {
+					this.long = await position.coords.longitude
+					this.lat = await position.coords.latitude
+					if (this.lat === null && this.long === null) {
+						this.displayAirQuality = true
+					} else {
+						this.displayAirQuality = false
+						console.log(this.long, this.lat)
+						this.checkNavigation()
+					}
+				})
+			} catch (err) {
+				console.log(err)
+			}
 		},
 		checkNavigation() {
 			if (this.lat === null && this.long === null) {
@@ -78,6 +82,20 @@ export default {
 			this.period.dominant = this.dataB.response[0].periods[0].dominant
 			let temp = this.dataB.response[0].periods[0].dateTimeISO
 			this.period.date = temp.substring(0, 10)
+
+			//sending data to store
+			try {
+				this.$store.dispatch('pdf/storeAirQuality', {
+					lat: this.lat,
+					long: this.long,
+					place: this.place,
+					period: this.period,
+				})
+			} catch (err) {
+				alert('failed to store data', err)
+				console.log(err)
+			}
+			this.$store.dispatch('firestore/getSuggestionData', this.period.category)
 		},
 	},
 }

@@ -35,7 +35,7 @@ export default {
 		Chart,
 	},
 	props: ['queryReason'],
-	emits: ['changeSolutionView'],
+	emits: ['changeSolutionView', 'change-solution-view'],
 	mounted() {
 		this.calculateToxicity()
 	},
@@ -48,34 +48,19 @@ export default {
 		return {
 			displayToxicity: true,
 			basicData: null,
-			field: ['Identity Attack', 'Insult', 'Obscene', 'Severe Toxicity', 'Sexual Eplicit', 'Threat', 'Toxicity'],
+			field: ['Identity Attack', 'Insult', 'Obscene', 'Severe Toxicity', 'Sexual Explicit', 'Threat', 'Toxicity'],
 			probabilityMatches: null,
 		}
 	},
 	methods: {
 		setEvaluationTrue() {
-			console.log('logo clicked')
 			this.$emit('change-solution-view', false)
 		},
 		async calculateToxicity() {
 			const threshold = 0.9
 			const sentences = [this.queryReason]
-			// toxicity.load(threshold).then((model) => {
-			//   const sentences = [this.queryReason];
-			//   model.classify(sentences).then((predictions) => {
-			//     console.log(predictions);
-			//   });
-			// });
 			const model = await toxicity.load(threshold)
 			const predictions = await model.classify(sentences)
-			// handles loader and storing to global sstore
-			// if (model === null && predictions === null) {
-			// 	// this.$emit('display-toxicity', false)
-			// 	this.$store.dispatch('changeViewEvaluation', false)
-			// 	console.log(this.$store.getters['viewEvaluationGetter'])
-			// 	this.displayToxicity = true
-			// 	console.log(this.displayToxicity)
-			// } else { }
 			const labels = []
 			const matches = []
 			const probs = []
@@ -96,7 +81,7 @@ export default {
 					probs.push(aveProb)
 				}
 			}
-			console.log(matches)
+			// console.log(matches)
 			this.probabilityMatches = [...matches]
 			this.basicData = {
 				labels: ['Identity Attack', 'Insult', 'Obscene', 'Severe Toxicity', 'Sexual Explicit', 'Threat', 'Toxicity'],
@@ -108,6 +93,32 @@ export default {
 					},
 				],
 			}
+			this.checkToxicityCategory(matches)
+			//sending data to store
+			try {
+				this.$store.dispatch('pdf/storeToxicity', {
+					chartDataForToxicity: this.basicData,
+					probabilityMatches: this.probabilityMatches,
+				})
+			} catch (err) {
+				alert('failed to store data', err)
+				console.log(err)
+			}
+			// const t = this.$store.getters['pdf/getState']
+			// console.log('hey store here', t.chartDataForToxicity, t.probabilityMatches, t.field)
+		},
+
+		checkToxicityCategory(matches) {
+			let index = 0
+			const obj = []
+			matches.forEach((match) => {
+				if (match === true) {
+					console.log(match, this.field[index])
+					obj.push(this.field[index])
+				}
+				index += 1
+			})
+			this.$store.dispatch('firestore/getToxicityData', obj)
 		},
 	},
 }
@@ -186,6 +197,9 @@ export default {
 .toxicity__analysis__text-output {
 	display: flex;
 	flex-direction: column;
+}
+.toxicity__loader__icon {
+	font-size: 5rem;
 }
 
 @media only screen and (max-width: 600px) {

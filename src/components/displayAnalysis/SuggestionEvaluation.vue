@@ -116,7 +116,18 @@ export default {
 					],
 				}
 			}
+			// sending data to store
 			console.log(this.sentimentBody)
+			try {
+				this.$store.dispatch('pdf/storeEvaluation', {
+					queryReason: this.queryReason,
+					sentimentBody: this.sentimentBody,
+					chartDataForSentiment: this.chartData,
+				})
+			} catch (err) {
+				alert('failed to store data', err)
+				console.log(err)
+			}
 		},
 	},
 }
