@@ -1,5 +1,5 @@
 <template>
-	<ToPdf v-if="viewModal" :viewModal="viewModal" @closeModal="closeModalView" />
+	<ToPdf v-if="viewModal" :viewModal="viewModal" @closeModal="closeModalView" :downloadPDFProp="downloadPDFProp" />
 	<section>
 		<div class="analysis-content">
 			<div class="analysis-content__btn__container">
@@ -12,7 +12,7 @@
 						<p>&nbsp;View Session Summary</p>
 						<i class="pi pi-eye" style="fontSize: 2rem; marginLeft:0.5rem"></i>
 					</div>
-					<div class="pdf__button--download">
+					<div class="pdf__button--download" @click="viewPdfSummary">
 						<p>&nbsp;Download PDF Copy</p>
 						<i class="pi pi-download" style="fontSize: 2rem; marginLeft:0.5rem"></i>
 					</div>
@@ -99,6 +99,7 @@ export default {
 			showEvaluation: false,
 			isLoading: false,
 			viewModal: false,
+			downloadPDFProp: false,
 		}
 	},
 	methods: {
@@ -113,15 +114,24 @@ export default {
 			const val = this.$store.getters['firestore/getState'] //fetching data from store
 			if (val.toxicitySuggestions !== null) {
 				//merging toxicity suggestions with airquality suggestions
-				console.log(val.toxicitySuggestions)
 				this.tabs = val.airQualitySuggestions.concat(val.toxicitySuggestions)
 				console.log(this.tabs)
+				// //storing data to new store
+				// try {
+				// 	this.$store.dispatch('pdf/storeSuggestion', {
+				// 		suggestion: this.tabs,
+				// 	})
+				// } catch (err) {
+				// 	alert('failed to store data', err)
+				// 	console.log(err)
+				// }
 			} else {
 				this.tabs = val.airQualitySuggestions
 			}
 		},
 		showSuggestions() {
 			if (this.period.category) {
+				// manual setup based from dummydata
 				// suggestiondata.forEach((category) => {
 				// 	if (category.superTitle === this.period.category) {
 				// 		const body = []
@@ -146,14 +156,15 @@ export default {
 				} else {
 					this.tabs = val.airQualitySuggestions
 				}
-			}
-			try {
-				this.$store.dispatch('pdf/storeSuggestion', {
-					suggestion: this.tabs,
-				})
-			} catch (err) {
-				alert('failed to store data', err)
-				console.log(err)
+				//storing datta to store
+				try {
+					this.$store.dispatch('pdf/storeSuggestion', {
+						suggestion: this.tabs,
+					})
+				} catch (err) {
+					alert('failed to store data', err)
+					console.log(err)
+				}
 			}
 		},
 		querySubmit() {
@@ -173,6 +184,9 @@ export default {
 		},
 		closeModalView() {
 			this.viewModal = false
+		},
+		downloadPDF() {
+			this.downloadPDFProp = true
 		},
 	},
 }

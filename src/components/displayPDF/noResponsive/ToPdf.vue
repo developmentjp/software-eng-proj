@@ -46,18 +46,14 @@ export default {
 		ToPdfRight,
 		ToPdfLeft,
 	},
-	props: ['viewModal', 'downloadPDFProp'],
+	props: ['viewModal'],
 	emits: ['closeModal', 'close-modal'],
-	beforeCreate() {
-		// console.log(this.$refs.pdfDocument.innerHTML)
-		if (this.downloadPDFProp === true) {
-			this.downloadPDF()
-		}
+	mounted() {
+		console.log(this.$refs.pdfDocument.innerHTML)
 	},
 	data() {
 		return {
 			dateName: null,
-			display: false,
 		}
 	},
 	methods: {
@@ -70,15 +66,8 @@ export default {
 				margin: 0,
 				filename: `mySession@${this.dateName}.pdf`,
 				image: { type: 'jpeg', quality: 1 },
-				html2canvas: {
-					dpi: 192,
-					letterRendering: true,
-					unit: 'px',
-					windowWidth: 1920,
-					windowHeight: 1080,
-					width: 792,
-					height: 900,
-				},
+				html2canvas: { dpi: 192, letterRendering: true },
+				jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
 			})
 		},
 		getDate() {

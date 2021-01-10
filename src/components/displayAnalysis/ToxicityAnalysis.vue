@@ -113,7 +113,7 @@ export default {
 			const obj = []
 			matches.forEach((match) => {
 				if (match === true) {
-					console.log(match, this.field[index])
+					// console.log(match, this.field[index]) check if working
 					obj.push(this.field[index])
 				}
 				index += 1

@@ -8,7 +8,7 @@
 		</div>
 	</section>
 	<section class="display__loader" v-if="displayAirQuality">
-		<p>Fetching the Necessary Resources...</p>
+		<p>Please Reload the Website</p>
 	</section>
 </template>
 
@@ -49,25 +49,23 @@ export default {
 		getNavigation() {
 			try {
 				navigator.geolocation.getCurrentPosition(async (position) => {
+					this.displayAirQuality = true
+					// this.long === null
 					this.long = await position.coords.longitude
 					this.lat = await position.coords.latitude
-					if (this.lat === null && this.long === null) {
-						this.displayAirQuality = true
-					} else {
-						this.displayAirQuality = false
-						console.log(this.long, this.lat)
-						this.checkNavigation()
-					}
+					console.log(this.long, this.lat)
+					this.checkNavigation()
 				})
 			} catch (err) {
 				console.log(err)
 			}
 		},
 		checkNavigation() {
-			if (this.lat === null && this.long === null) {
+			if (this.lat === null || this.long === null) {
 				console.log('Failed to Get User Location!')
-				alert('Failed to Get User Location!')
+				alert('Failed to Get User Location!, Please Reload the Page and Allow Website to Access User Location')
 			} else {
+				this.displayAirQuality = false
 				this.storeData()
 			}
 		},

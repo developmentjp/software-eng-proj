@@ -52,7 +52,7 @@ export default {
 					}
 				})
 			})
-			console.log(suggestion)
+			// console.log(suggestion) check if exists
 			context.commit('getToxicityData', suggestion)
 		} catch (err) {
 			console.log(err)
