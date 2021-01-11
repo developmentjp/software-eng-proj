@@ -1,5 +1,12 @@
 <template>
 	<div class="modal" @click="closeModalBackground"></div>
+	<div class="modal__download" v-if="displayDownloadModal">
+		<DownloadModal
+			@closePdfDownload="closePdfDownloadModal"
+			@downloadFromModal="downloadAndCloseModal"
+			@closeAllModal="closeModalBackground"
+		/>
+	</div>
 	<div class="toPdf">
 		<div ref="pdfDocument">
 			<div class="toPdf__heading">
@@ -41,23 +48,20 @@ import html2pdf from 'html2pdf.js'
 
 import ToPdfRight from './ToPdfRight'
 import ToPdfLeft from './ToPdfLeft'
+import DownloadModal from './DownloadModal'
 export default {
 	components: {
 		ToPdfRight,
 		ToPdfLeft,
+		DownloadModal,
 	},
 	props: ['viewModal', 'downloadPDFProp'],
 	emits: ['closeModal', 'close-modal'],
-	beforeCreate() {
-		// console.log(this.$refs.pdfDocument.innerHTML)
-		if (this.downloadPDFProp === true) {
-			this.downloadPDF()
-		}
-	},
 	data() {
 		return {
 			dateName: null,
 			display: false,
+			displayDownloadModal: this.downloadPDFProp,
 		}
 	},
 	methods: {
@@ -73,9 +77,6 @@ export default {
 				html2canvas: {
 					dpi: 192,
 					letterRendering: true,
-					unit: 'px',
-					windowWidth: 1920,
-					windowHeight: 1080,
 					width: 792,
 					height: 900,
 				},
@@ -87,6 +88,13 @@ export default {
 			let month = d.getMonth() + 1 // Since getMonth() returns month from 0-11 not 1-12
 			let year = d.getFullYear()
 			this.dateName = date + '/' + month + '/' + year
+		},
+		closePdfDownloadModal() {
+			this.displayDownloadModal = false
+		},
+		downloadAndCloseModal() {
+			this.downloadPDF()
+			this.closeModalBackground()
 		},
 	},
 }

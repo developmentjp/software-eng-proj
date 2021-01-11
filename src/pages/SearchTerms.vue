@@ -1,5 +1,6 @@
 <template>
 	<section>
+		<div class="backdrop"></div>
 		<h1>Wikipedia Search</h1>
 		<h3>Hey, Search the terms that you don't understand here</h3>
 		<a

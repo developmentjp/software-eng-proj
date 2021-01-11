@@ -12,7 +12,7 @@
 						<p>&nbsp;View Session Summary</p>
 						<i class="pi pi-eye" style="fontSize: 2rem; marginLeft:0.5rem"></i>
 					</div>
-					<div class="pdf__button--download" @click="viewPdfSummary">
+					<div class="pdf__button--download" @click="downloadPDF">
 						<p>&nbsp;Download PDF Copy</p>
 						<i class="pi pi-download" style="fontSize: 2rem; marginLeft:0.5rem"></i>
 					</div>
@@ -26,7 +26,10 @@
 						<i class="pi pi-user" style="fontSize: 3rem"></i>
 						<h3>
 							Hello User!&nbsp; We noticed that the Air Quality status in your surroundings is quite
-							<span>{{ period.category }}!</span>
+							<span :style="{ color: period.category === 'good' ? 'green' : 'red' }"
+								>{{ period.category }} <span v-if="period.category === 'good'">&#128512;</span
+								><span v-else>&#128532;</span></span
+							>
 							<!-- <br />It has an AQI rating of {{ period.aqi }}! -->
 						</h3>
 					</div>
@@ -34,8 +37,18 @@
 
 				<div class="analysis-suggestion suggestion" v-if="!viewEvaluation">
 					<div class="suggestion-header">
-						<h3>
-							We provided here some solutions and suggestions that might help you:
+						<h3 v-if="showNewSolution">
+							We noticed that your current situation is
+							<span :style="{ color: situation.toLowerCase() === 'positive' ? 'green' : 'red' }">{{ situation }}</span
+							>.
+							<span v-if="situation.toLowerCase() === 'negative'"
+								>We provided here additional solutions that may assist you &#128221;</span
+							><span v-if="situation.toLowerCase() === 'positive'"
+								>&nbsp;Hope You will always have a good day &#128513;</span
+							>
+						</h3>
+						<h3 v-if="!showNewSolution">
+							We provided here some solutions and suggestions that might help you &#128221;
 						</h3>
 					</div>
 					<div class="suggestion-results">
@@ -56,6 +69,14 @@
 									<button class="suggestion-query__submit__button" type="submit">Submit</button>
 								</div>
 							</form>
+						</div>
+					</div>
+
+					<div class="suggestion-contact">
+						<p class="suggestion-contact__label">Are there any problems with the solutions that we provided you?</p>
+						<div class="pdf__button--download suggestion-contact__button" @click="redirectToContactPage">
+							<p>&nbsp;Send Us Message</p>
+							<i class="pi pi-envelope" style="fontSize: 2rem; marginLeft:0.5rem"></i>
 						</div>
 					</div>
 				</div>
@@ -100,6 +121,8 @@ export default {
 			isLoading: false,
 			viewModal: false,
 			downloadPDFProp: false,
+			showNewSolution: false,
+			situation: null,
 		}
 	},
 	methods: {
@@ -107,15 +130,24 @@ export default {
 			this.$emit('show-solution', false)
 		},
 		modifyView(value) {
-			this.showEvaluation = value
-			this.viewEvaluation = value
+			this.showEvaluation = value.display
+			this.viewEvaluation = value.display
+			//update user status
+			if (value.status.toLowerCase() === 'negative') {
+				this.showNewSolution = true
+				this.situation = 'Negative'
+			} else {
+				this.showNewSolution = true
+				this.situation = 'Positive'
+			}
 			this.queryReason = null
 			// fetching data from store uncomment when production/real test reactivity
 			const val = this.$store.getters['firestore/getState'] //fetching data from store
 			if (val.toxicitySuggestions !== null) {
 				//merging toxicity suggestions with airquality suggestions
 				this.tabs = val.airQualitySuggestions.concat(val.toxicitySuggestions)
-				console.log(this.tabs)
+				// console.log(this.tabs)
+
 				// //storing data to new store
 				// try {
 				// 	this.$store.dispatch('pdf/storeSuggestion', {
@@ -152,7 +184,7 @@ export default {
 				if (val.toxicitySuggestions !== null) {
 					//merging toxicity suggestions with airquality suggestions
 					this.tabs = val.airQualitySuggestions.concat(val.toxicitySuggestions)
-					console.log(this.tabs)
+					// console.log(this.tabs)
 				} else {
 					this.tabs = val.airQualitySuggestions
 				}
@@ -184,9 +216,14 @@ export default {
 		},
 		closeModalView() {
 			this.viewModal = false
+			this.downloadPDFProp = false
 		},
 		downloadPDF() {
 			this.downloadPDFProp = true
+			this.viewModal = true
+		},
+		redirectToContactPage() {
+			this.$router.push('/contact')
 		},
 	},
 }
@@ -303,7 +340,7 @@ p {
 .suggestion__question__container {
 	width: 100%;
 	padding: 2rem 0rem;
-	margin-top: 2rem;
+	margin-top: 1rem;
 	background: #1c1c25;
 	border-radius: 1rem;
 	display: flex;
@@ -317,7 +354,7 @@ p {
 .suggestion {
 	/* height: 100%; */
 	flex: 1;
-	margin-top: 0.2rem;
+	margin-top: 0.3rem;
 }
 .suggestion-header {
 	display: flex;
@@ -386,6 +423,18 @@ form {
 	border: 3px solid #16161d83;
 	border-radius: 0.5rem;
 }
+.suggestion-contact {
+	width: 100%;
+	padding: 1rem;
+	margin-top: 1rem;
+	background: #1c1c25;
+	border-radius: 1rem;
+	display: flex;
+	justify-content: space-between;
+}
+.suggestion-contact__label {
+	font-size: 1.25rem;
+}
 @media only screen and (max-width: 600px) {
 	.analysis-content__btn__container {
 		padding: 0rem 1rem;
@@ -416,6 +465,16 @@ form {
 	}
 	.analysis-suggestion h1 {
 		font-size: 1.5rem;
+	}
+	.suggestion-contact {
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	.suggestion-contact__label {
+		margin-bottom: 0.5rem;
+		text-align: center;
+		font-size: 0.9rem;
 	}
 }
 @media only screen and (min-height: 1080px) {

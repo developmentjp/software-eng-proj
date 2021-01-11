@@ -1,7 +1,7 @@
 <template>
 	<section>
 		<div class="heading">
-			<h1>Context Evaluation Report &nbsp;</h1>
+			<h1>Context Evaluation Report &#128202;</h1>
 			<!-- <i class="pi pi-briefcase" style="fontSize: 1.5rem"></i> -->
 		</div>
 		<div class="body-container">
@@ -80,7 +80,8 @@ export default {
 	},
 	methods: {
 		changeSolution(value) {
-			this.$emit('modify-solution-view', value)
+			//emitting the data back to parent analysiscontent
+			this.$emit('modify-solution-view', { display: value, status: this.sentimentBody.status })
 		},
 		async analyzeSentiment() {
 			if (this.queryReason) {

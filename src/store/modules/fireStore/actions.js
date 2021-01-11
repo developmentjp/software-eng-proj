@@ -30,7 +30,7 @@ export default {
 					})
 				}
 			})
-			console.log(suggestion)
+			// console.log(suggestion)
 			context.commit('getSuggestionData', suggestion)
 			// context.commit('getSuggestionData', { ...suggestion })
 		} catch (err) {

@@ -1,5 +1,5 @@
 <template>
-	<section class="section">
+	<section class="section" ref="contactSection">
 		<div class="section__img">
 			<img class="section__img__bg" src="../assets/contact-design.svg" alt="contact img" />
 		</div>
@@ -28,7 +28,43 @@
 </template>
 
 <script>
-export default {}
+import Vanta from 'vanta/dist/vanta.net.min'
+import * as THREE from 'three'
+export default {
+	mounted() {
+		this.loadV()
+	},
+	data() {
+		return {
+			vantaEffect: null,
+		}
+	},
+	methods: {
+		loadV() {
+			this.vantaEffect = Vanta({
+				el: this.$refs.contactSection,
+				THREE,
+				mouseControls: true,
+				touchControls: true,
+				gyroControls: false,
+				minHeight: 200.0,
+				minWidth: 200.0,
+				scale: 1.0,
+				scaleMobile: 1.0,
+				color: 0xffffff,
+				backgroundColor: 0x1d2125,
+				points: 7.0,
+				maxDistance: 24.0,
+				spacing: 20.0,
+			})
+		},
+	},
+	beforeUnmount() {
+		if (this.vantaEffect) {
+			this.vantaEffect.destroy()
+		}
+	},
+}
 </script>
 
 <style scoped>
@@ -41,7 +77,8 @@ section {
 .section__form {
 	width: 50%;
 	height: 100%;
-	margin: auto;
+	background: #1c1c25ad;
+	border-radius: 1rem;
 }
 .section__img {
 	display: flex;
@@ -52,6 +89,7 @@ section {
 	width: 60%;
 }
 .section__form {
+	padding-right: 5rem;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -130,8 +168,11 @@ h5 {
 	.section__img {
 		margin-right: 2rem;
 	}
+	.section__img,
+	.section__form {
+		padding-right: 5rem;
+	}
 }
-
 @media only screen and (max-width: 600px) {
 	.section {
 		padding: 1rem;
@@ -142,6 +183,7 @@ h5 {
 	.section__form {
 		width: 100%;
 		padding-top: 5rem;
+		padding: 5rem 1rem 0rem 1rem;
 		justify-content: flex-start;
 	}
 	.form__button__container {

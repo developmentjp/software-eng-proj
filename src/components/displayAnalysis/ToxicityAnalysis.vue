@@ -81,7 +81,12 @@ export default {
 					probs.push(aveProb)
 				}
 			}
-			// console.log(matches)
+			// console.log(matches) somethimes matches becomes null change it
+			matches.forEach((match, index) => {
+				if (match === null) {
+					matches[index] = false
+				}
+			})
 			this.probabilityMatches = [...matches]
 			this.basicData = {
 				labels: ['Identity Attack', 'Insult', 'Obscene', 'Severe Toxicity', 'Sexual Explicit', 'Threat', 'Toxicity'],
